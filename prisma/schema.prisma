@@ -1,0 +1,18 @@
+datasource db {
+    provider = "postgresql"
+    url = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model User {
+    id          String  @id
+    email       String  @unique
+    password    String
+    name        String
+    // posts       [Post]  @relation(name: "UserPosts")
+}
+
+// Temporal
