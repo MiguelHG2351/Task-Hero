@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import { signIn, signOut } from 'next-auth/react'
 
 export default function Home() {
     return (
@@ -40,6 +41,8 @@ export default function Home() {
                     </div>
                 </div>
             </div>
+            <button onClick={() => signIn()}>Login</button>
+            <button onClick={() => signOut()}>Logout</button>
         </>
     )
 }
