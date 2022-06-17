@@ -10,6 +10,12 @@ generator client {
     provider = "prisma-client-js"
 }
 
+model permission {
+    id          Int @id
+    name        String @unique
+    description String
+}
+
 model User {
     id          String  @id
     email       String  @unique
@@ -17,5 +23,14 @@ model User {
     name        String
     // posts       [Post]  @relation(name: "UserPosts")
 }
+
+model Team {
+    id Int @id
+    // varchar 
+    full_name String @db.VarChar(100)
+    vault Int
+}
+
+
 
 // Temporal
