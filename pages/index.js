@@ -1,8 +1,10 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { signIn, signOut } from 'next-auth/react'
+import { signIn, signOut, useSession } from 'next-auth/react'
 
 export default function Home() {
+    const data = useSession()
+
     return (
         <>
             <Head>
@@ -43,6 +45,7 @@ export default function Home() {
             </div>
             <button onClick={() => signIn()}>Login</button>
             <button onClick={() => signOut()}>Logout</button>
+            <p>{data.data?.user.name}</p>
         </>
     )
 }
