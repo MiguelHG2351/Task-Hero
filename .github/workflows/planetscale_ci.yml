@@ -27,8 +27,7 @@ jobs:
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          node-version: '14'
       - run: npm install
       - run: npx prisma generate
       - run: npx prisma db push
