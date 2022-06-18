@@ -4,6 +4,7 @@ import { signIn, signOut, useSession } from 'next-auth/react'
 
 export default function Home() {
     const data = useSession()
+    console.log(data)
 
     return (
         <>
@@ -49,3 +50,7 @@ export default function Home() {
         </>
     )
 }
+
+// export async function getServerSideProps(context) {
+    
+// }
