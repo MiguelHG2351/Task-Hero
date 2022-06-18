@@ -7,7 +7,7 @@
     "start": "next start",
     "build": "next build",
     "dev": "next dev",
-    "vercel-build": "prisma migrate deploy && next build"
+    "vercel-build": "prisma db push"
   },
   "repository": {
     "type": "git",
