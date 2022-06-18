@@ -22,13 +22,13 @@ jobs:
       DATABASE_URL: ${{ secrets.SHADOW_URL }}
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - name: Agregando los cambios a la shadow DB
-    - run: npx prisma generate
-    - run: npx prisma db push
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - name: Agregando los cambios a la shadow DB
+      - run: npx prisma generate
+      - run: npx prisma db push
