@@ -6,7 +6,8 @@
   "scripts": {
     "start": "next start",
     "build": "next build",
-    "dev": "next dev"
+    "dev": "next dev",
+    "vercel-build": "prisma migrate deploy && next build"
   },
   "repository": {
     "type": "git",
