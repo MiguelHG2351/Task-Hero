@@ -69,6 +69,11 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model Xd {
+id String @id @default(cuid())
+name String @unique
+}
+
 
 
 // Temporal
