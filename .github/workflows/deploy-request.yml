@@ -3,6 +3,9 @@ name: 02 - Diff between Database
 on:
   workflow_dispatch
 
+env:
+  pscale_base_directory: .pscale
+
 
 jobs:
   build:
