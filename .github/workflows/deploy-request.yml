@@ -25,6 +25,7 @@ jobs:
           PLANETSCALE_SERVICE_TOKEN: ${{secrets.PLANETSCALE_SERVICE_TOKEN}}
           ORG_NAME: ${{secrets.ORG_NAME}}
           DB_NAME: ${{secrets.DB_NAME}}
+          BRANCH_NAME: ${{secrets.BRANCH_NAME}}
           GITHUB_USER: ${{github.actor}}
         working-directory: ${{env.pscale_base_directory}}/cli-helper-scripts/
         run: ./create-deploy-request.sh
