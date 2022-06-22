@@ -2,7 +2,7 @@
 
 raw_output=`pscale deploy-request list "$DB_NAME" --org "$ORG_NAME" --format json`
 
-output=`echo $raw_output | jq "[.[] | select(.state == \"open\") ] | .[0].deployment.deployable "`
+output=`echo $raw_output | jq ".[0].number "`
 
 echo $output
 

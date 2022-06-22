@@ -6,8 +6,7 @@
   "scripts": {
     "start": "next start",
     "build": "next build",
-    "dev": "next dev",
-    "vercel-build": "prisma db push"
+    "dev": "next dev"
   },
   "repository": {
     "type": "git",
