@@ -4,7 +4,9 @@ export default function Layout({children}) {
     return (
         <>
             <Header />
-            {children}
+            <main>
+                {children}
+            </main>
         </>
     )
 }

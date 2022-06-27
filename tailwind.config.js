@@ -1,6 +1,19 @@
 const colors = require('tailwindcss/colors')
 const defaultTheme = require('tailwindcss/defaultTheme')
 
+const customColorsList = {
+    bg: {
+        primary: 'var(--color-bg-primary)',
+        secondary: 'var(--color-bg-secondary)',
+        accent: 'var(--color-bg-accent)',
+    },
+    textAndOther: {
+        accent: 'var(--color-text-accent)',
+        primary: 'var(--color-text-primary)',
+        secondary: 'var(--color-text-secondary)',
+    }
+}
+
 module.exports = {
     content: [
         './pages/**/*.{js,ts,jsx,tsx}',
@@ -15,6 +28,13 @@ module.exports = {
             fontFamily: {
                 sans: ['Inter', ...defaultTheme.fontFamily.sans],
             },
+            backgroundColor: customColorsList.bg,
+            borderColor: customColorsList.textAndOther,
+            textColor: customColorsList.textAndOther,
+            fill: customColorsList.textAndOther,
+            borderWidth: {
+                '0.5': '0.5px',
+            }
         },
         colors: {
             transparent: 'transparent',
@@ -31,7 +51,9 @@ module.exports = {
             slate: colors.slate,
             indigo: colors.indigo,
             cyan: colors.cyan,
-            'dark-mode': '#3D3C3F',
+            'dark-primary': '#3D3C3F',
+            'gray-text': '#ACACAC',
+            'dark-secondary': '#242426',
         },
     },
     plugins: [],
