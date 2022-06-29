@@ -4,6 +4,7 @@
 
  const nextConfig = {
     poweredByHeader: false,
+    experimental: { images: { allowFutureImage: true } }
 }
 
 module.exports = nextConfig
