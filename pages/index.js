@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import Image from 'next/future/image'
-import Counter from 'components/Counter'
 // import { signIn, signOut, useSession } from 'next-auth/react'
 
 export default function Home() {
@@ -151,7 +150,6 @@ export default function Home() {
                     </button>
                 </article>
             </section>
-            <Counter />
             {/* <div className="login"> */}
                 {/* <button onClick={() => signIn()}>Login</button>
                 <button onClick={() => signOut()}>Logout</button>
