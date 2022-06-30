@@ -1,19 +1,34 @@
-import Layout from '../components/containers/Layout'
-import { SessionProvider } from 'next-auth/react'
-import { Provider as ReduxProvider } from 'react-redux'
-import '../styles/global.css'
+import { AppProps } from "next/app";
+import { SessionProvider } from "next-auth/react";
+import { Provider as ReduxProvider } from "react-redux";
+import { AnimatePresence } from "framer-motion";
+import Layout from "../components/containers/Layout";
+import "../styles/global.css";
 
-import store from '../lib/redux'
+import store from "../lib/redux";
 
-export default function App({ Component, pageProps: {session, ...pageProps} }) {
-  
+/**
+ * 
+ * @param {AppProps} param0 
+ */
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+  router,
+}) {
+  const url = `https://wallis.dev${router.route}`
   return (
     <ReduxProvider store={store}>
       <SessionProvider session={session}>
         <Layout>
-            <Component {...pageProps} />
+          <AnimatePresence
+            exitBeforeEnter
+            initial={false}
+            onExitComplete={() => window.scrollTo(0, 0)}>
+            <Component {...pageProps} canonical={url} key={url} />
+          </AnimatePresence>
         </Layout>
       </SessionProvider>
     </ReduxProvider>
-  )
+  );
 }

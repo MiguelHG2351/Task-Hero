@@ -17,6 +17,6 @@ export const projectSlice = createSlice({
     },
   })
   
-  export const { setProjects, setProject } = counterSlice.actions
+  export const { setProjects, setProject } = projectSlice.actions
   
-  export default counterSlice.reducer
+  export default projectSlice.reducer
