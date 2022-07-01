@@ -1,22 +1,22 @@
-import Image from "next/image";
+import Image from "next/future/image";
+import { motion } from "framer-motion";
 
-
-export default function MenuProject() {
+export default function MenuProject({ name }) {
   return (
-    <section className="menu-project">
+    <motion.section className="menu-project">
       <picture className="header-home">
         <source
           srcSet="/images/examples/background-project.png"
           media="(min-width: 768px)"
         />
-        <img
-          className="inline-block align-middle"
+        <Image
+          className="inline-block align-middle w-full"
           src="/images/examples/background-project.png"
           alt="imagen"
         />
       </picture>
-      <div className="project-info flex justify-between items-center p-2 px-3">
-        <div className="project-name flex justify-start items-center gap-x-3">
+      <div className="project-info grid grid-cols-[minmax(0,_1fr)_min-content] justify-between items-center p-2 px-3">
+        <div className="project-namea flex justify-start items-center gap-x-3">
           <span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -40,9 +40,9 @@ export default function MenuProject() {
               />
             </svg>
           </span>
-          <h1 className="text-lg text-primary m-0">Real Stable website</h1>
+          <h1 className="text-lg text-primary m-0 whitespace-nowrap text-ellipsis overflow-hidden">{name}</h1>
         </div>
-        <div className="user-in-project inline-flex items-center gap-x-3">
+        <div className="user-in-project w-auto inline-flex items-center justify-end gap-x-3">
           <div className="user-list flex -space-x-2">
             <div className="user-list-image ring-2 rounded-full">
               <Image
@@ -117,6 +117,6 @@ export default function MenuProject() {
           Hight
         </button>
       </div>
-    </section>
+    </motion.section>
   );
 }
