@@ -13,7 +13,6 @@ generator client {
 model Team {
   id          String        @id @default(cuid())
   full_name   String        @db.VarChar(100)
-  vaultId     Int
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @default(now())
   projects    Project[]
@@ -167,6 +166,12 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model AdminAPI {
+  id         String @id @default(cuid())
+  name       String
+  password    String
 }
 
 enum Role {
