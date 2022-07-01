@@ -30,7 +30,6 @@ const initialState = {
       ],
     },
   ],
-  currentProject: {},
 };
 
 export const projectSlice = createSlice({
@@ -46,5 +45,12 @@ export const projectSlice = createSlice({
 });
 
 export const { setProjects, setProject } = projectSlice.actions;
+
+export const selectProject = (state, projectName) => {
+  const findProject = state.projects.find((project) => project.projectName === projectName)
+  if(findProject) {
+    return findProject
+  }
+}
 
 export default projectSlice.reducer;

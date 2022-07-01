@@ -1,8 +1,9 @@
 import Head from 'next/head'
-import { signIn, signOut, useSession } from 'next-auth/react'
+import { signIn, signOut } from 'next-auth/react'
 import { LayoutGroup } from 'framer-motion'
-import { useSelector } from 'react-redux'
-
+// import { useSelector } from 'react-redux'
+// import { useRouter } from 'next/router'
+// import { selectProject } from 'app/redux/counterSlice'
 
 import Layout from "components/containers/Layout/UserLayout";
 import MenuProject from 'components/containers/Home/MenuProject'
@@ -11,8 +12,6 @@ import authentication from 'app/server/authentication';
 
 export default function Home({ user }) {
     const data = user
-    const getData = useSelector((state) => state.project.projects)
-    console.log(getData)
 
     return (
         <>
@@ -20,7 +19,7 @@ export default function Home({ user }) {
                 <title>Home</title>
             </Head>
             <LayoutGroup>
-                <MenuProject name={getData[0].projectName} />
+                <MenuProject name={"xD"} />
             </LayoutGroup>
             <CardList />
             <div className="login">
@@ -37,6 +36,7 @@ Home.PageLayout = Layout
 
 export async function getServerSideProps(context) {
     const user = await authentication(context)
+    console.log(context.query)
 
     if(!user) {
         return {

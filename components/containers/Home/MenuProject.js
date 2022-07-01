@@ -13,6 +13,7 @@ export default function MenuProject({ name }) {
           className="inline-block align-middle w-full"
           src="/images/examples/background-project.png"
           alt="imagen"
+          priority
         />
       </picture>
       <div className="project-info grid grid-cols-[minmax(0,_1fr)_min-content] justify-between items-center p-2 px-3">
