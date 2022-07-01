@@ -37,8 +37,8 @@ model Secret {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @default(now())
   teamId      String
-  VaultTeam   VaultTeam? @relation(fields: [vaultTeamId], references: [id])
-  vaultTeamId String?
+  VaultTeam   VaultTeam @relation(fields: [vaultTeamId], references: [id])
+  vaultTeamId String
 }
 
 model TeamAndUser {
