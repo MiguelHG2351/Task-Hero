@@ -1,6 +1,6 @@
 export default function CardList() {
   return (
-    <section className="card-list px-4 py-4 bg-secondary">
+    <section className="card-list px-4 py-4 bg-secondary md:flex md:gap-x-3 md:whitespace-nowrap md:overflow-x-auto">
       <article>
         <header className="border-dark-secondary border-b-primary border-b-0.5 border-solid flex items-center justify-between">
           <h2 className="text-primary text-sm bg-primary p-2 rounded-md font-bold">

@@ -28,14 +28,14 @@ export default function UserLayout({ children }) {
     <>
       <Header sidenavRef={sidenavRef} />
       <main className="relative min-h-[calc(100vh_-_45px)] md:h-[calc(100%_-45px)] overflow-hidden grid grid-cols-[min-content_minmax(0,_1fr)] grid-rows-1">
-        <section ref={sidenavRef} className="sidenav-project border-dark-primary border-0 border-t-primary border-t-0.5 border-solid absolute bg-black/[.6] h-[calc(100vh_-_45px)] left-0 top-0 w-screen md:static md:w-auto md:inline-block transition-transform -translate-x-[100vw] md:translate-x-0">
-          <div className="container w-5/6">
+        <section ref={sidenavRef} className="sidenav-project box-border border-dark-primary border-0 border-t-primary border-t-0.5 border-solid absolute bg-black/[.6] h-[calc(100vh_-_45px)] left-0 top-0 w-screen md:static md:w-auto md:inline-block transition-transform -translate-x-[100vw] md:translate-x-0">
+          <div className="container w-5/6 md:w-full">
             <div className="project-header bg-primary flex justify-between items-center py-4 px-2">
-              <div className="project-header-title">
-                <h1 className="inline-block align-middle m-0 mr-2 text-primary text-lg uppercase">
+              <div className="project-header-title inline-flex">
+                <h1 className="inline-block align-middle m-0 mr-2 text-primary text-sm uppercase">
                   Projects
                 </h1>
-                <span className="inline-block text-secondary text-lg align-middle">(8)</span>
+                <span className="inline-block text-secondary text-sm align-middle">(8)</span>
               </div>
               <div className="expandir-add inline-flex items-center">
                 <button className="p-2 bg-transparent border-none hover:bg-green-500/[.5] text-[0px] rounded">
@@ -51,7 +51,7 @@ export default function UserLayout({ children }) {
                       className="fill-primary"></path>
                   </svg>
                 </button>
-                <button className="p-2 bg-transparent border-none hover:bg-cyan-500/[.5] text-[0px] rounded">
+                <button className="p-2 bg-transparent border-none hover:bg-cyan-500/[.5] text-[0px] rounded md:hidden">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"
