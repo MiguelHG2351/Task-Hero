@@ -1,6 +1,6 @@
-import Header from "../Header"
+import Header from "../../Header"
 
-export default function UserLayout({children}) {
+export default function AuthLayout({children}) {
     return (
         <>
             <Header />

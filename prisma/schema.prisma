@@ -24,7 +24,7 @@ model Team {
 model VaultTeam {
   id      String   @id @default(cuid())
   teamId  String
-  team    Team     @relation(fields: [teamId], references: [id])
+  team    Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   secrets Secret[]
 
   @@index([teamId])
@@ -37,7 +37,7 @@ model Secret {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @default(now())
   teamId      String
-  VaultTeam   VaultTeam @relation(fields: [vaultTeamId], references: [id])
+  VaultTeam   VaultTeam @relation(fields: [vaultTeamId], references: [id], onDelete: Cascade)
   vaultTeamId String
 }
 
@@ -45,6 +45,7 @@ model TeamAndUser {
   id     String @id @default(cuid())
   userId String
   teamId String
+  role Role @default(MEMBER)
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
@@ -56,7 +57,7 @@ model Project {
   description String
   name        String
   teamId      String
-  team        Team     @relation(fields: [teamId], references: [id])
+  team        Team     @relation(fields: [teamId], references: [id],  onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   tables     Table[]
@@ -68,7 +69,7 @@ model Table {
   name      String
   projectId String
   category  String    @db.Text
-  project   Project  @relation(fields: [projectId], references: [id])
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   cards    Card[]
   @@index([projectId])
 }
@@ -79,7 +80,7 @@ model Card {
   description String @db.Text
   category String    @db.Text
   tableId String
-  table   Table     @relation(fields: [tableId], references: [id])
+  table   Table     @relation(fields: [tableId], references: [id], onDelete: Cascade)
 
   messages MessageCard[]
   files File[]
@@ -92,9 +93,9 @@ model MessageCard {
   text    String    @db.Text
   img    String?    @db.Text
   authorId String
-  author   User      @relation(fields: [authorId], references: [id])
+  author   User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
   cardId  String
-  card     Card      @relation(fields: [cardId], references: [id])
+  card     Card      @relation(fields: [cardId], references: [id], onDelete: Cascade)
   @@index([authorId, cardId])
 }
 
@@ -102,9 +103,9 @@ model File {
   id       String    @id @default(cuid())
   path    String    @db.Text
   authorId String
-  author   User      @relation(fields: [authorId], references: [id])
+  author   User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
   cardId  String
-  card     Card      @relation(fields: [cardId], references: [id])
+  card     Card      @relation(fields: [cardId], references: [id], onDelete: Cascade)
   @@index([authorId, cardId])
 }
 
@@ -113,9 +114,9 @@ model Link {
   id       String    @id @default(cuid())
   url    String    @db.Text
   authorId String
-  author   User      @relation(fields: [authorId], references: [id])
+  author   User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
   cardId  String
-  card     Card      @relation(fields: [cardId], references: [id])
+  card     Card      @relation(fields: [cardId], references: [id], onDelete: Cascade)
   @@index([authorId, cardId])
 }
 

@@ -6,27 +6,31 @@ import { LayoutGroup } from 'framer-motion'
 // import { selectProject } from 'app/redux/counterSlice'
 
 import Layout from "components/containers/Layout/UserLayout";
-import MenuProject from 'components/containers/Home/MenuProject'
-import CardList from 'components/containers/Home/CardList'
+import MenuProject from 'components/pages/Project/MenuProject'
+import CardList from 'components/pages/Project/CardList'
 import authentication from 'app/server/authentication';
+import { useAppDispatch } from 'app/hook';
+import { setUser } from 'app/redux/counterSlice';
 
 export default function Home({ user }) {
-    const data = user
+    const dispatch = useAppDispatch();
+    dispatch(setUser(user));
 
     return (
         <>
             <Head>
                 <title>Home</title>
             </Head>
-            <LayoutGroup>
-                <MenuProject name={"xD"} />
-            </LayoutGroup>
-            <CardList />
-            <div className="login">
-                <button onClick={() => signIn()}>Login</button>
-                <button onClick={() => signOut()}>Logout</button>
-                <p>{data.data?.user.name}</p>
-            </div>
+            <section className="container-table">
+                <LayoutGroup>
+                    <MenuProject name={"xD"} />
+                </LayoutGroup>
+                <CardList />
+                <div className="login">
+                    <button onClick={() => signIn()}>Login</button>
+                    <button onClick={() => signOut()}>Logout</button>
+                </div>
+            </section>
         </>
     )
 }
