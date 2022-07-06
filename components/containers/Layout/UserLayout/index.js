@@ -1,16 +1,30 @@
+import Link from "next/link";
+import { useAppSelector } from "app/hook";
+import {
+  selectCurrentTeam,
+  selectUser
+} from "app/redux/counterSlice";
+
+import { useQuery } from "@apollo/client";
+import { GET_PROJECTS } from "app/apollo/projects";
+import { useRef, useState } from "react";
+import { useRouter } from "next/router";
+
 import Header from "../../Header";
 import LayoutListTeam from "components/pages/Home/LayoutListTeam";
 
-import { useAppDispatch, useAppSelector } from "app/hook";
-import { selectUser, setTeams } from "app/redux/counterSlice";
-import { useQuery } from "@apollo/client";
-import { GET_PROJECTS } from "app/apollo/projects";
-import { useRef } from "react";
 
 export default function UserLayout({ children }) {
+  const router = useRouter();
   const sidenavRef = useRef(null);
+  const mainSideRef = useRef(null);
+  const projectSideRef = useRef(null);
+  const modalRef = useRef(null);
   const selector = useAppSelector(selectUser);
-  const dispatch = useAppDispatch();
+  const currentTeam = useAppSelector(selectCurrentTeam);
+  const [team, setTeams] = useState([]);
+
+  console.log("Team", currentTeam);
   const { loading, error, data } = useQuery(GET_PROJECTS, {
     variables: {
       userId: selector.id,
@@ -18,27 +32,126 @@ export default function UserLayout({ children }) {
       take: 2,
     },
     onCompleted: (data) => {
-      console.log("data", data.getTeams);
-      dispatch(setTeams(data.getTeams));
+      const find = data.getTeams.find((team) => team.id === router.query.team);
+      console.log("list of project");
+      if (find === undefined) {
+        router.push("/u");
+      } else {
+        setTeams(find.projects);
+      }
     },
   });
-  console.log("funca", data);
+
+  function viewProject() {
+    mainSideRef.current.classList.add("translate-x-[-100vw]");
+    projectSideRef.current.classList.remove("translate-x-[-100vw]");
+  }
+
+  function closeProjectSide() {
+    mainSideRef.current.classList.remove("translate-x-[-100vw]");
+    projectSideRef.current.classList.add("translate-x-[-100vw]");
+  }
+
+  function modelProjectHandler() {
+    modalRef.current.classList.replace("hidden", "flex");
+  }
+
+  function closeModal(e) {
+    modalRef.current.classList.replace("flex", "hidden");
+  }
 
   return (
     <>
       <Header sidenavRef={sidenavRef} />
-      <main className="relative min-h-[calc(100vh_-_45px)] md:h-[calc(100%_-45px)] overflow-hidden grid grid-cols-[min-content_minmax(0,_1fr)] grid-rows-1">
-        <section ref={sidenavRef} className="sidenav-project box-border border-dark-primary border-0 border-t-primary border-t-0.5 border-solid absolute bg-black/[.6] h-[calc(100vh_-_45px)] left-0 top-0 w-screen md:static md:w-auto md:inline-block transition-transform -translate-x-[100vw] md:translate-x-0">
-          <div className="container w-5/6 md:w-full">
+      <main className="relative min-h-[calc(100vh_-_45px)] md:h-[calc(100%_-45px)] overflow-hidden md:grid md:grid-cols-[min-content_minmax(0,_1fr)] md:grid-rows-1">
+        <section
+          ref={sidenavRef}
+          className="sidenav-project box-border border-dark-primary border-0 border-t-primary border-t-0.5 border-solid absolute bg-black/[.6] h-[calc(100vh_-_45px)] left-0 top-0 w-screen md:flex md:static md:w-auto transition-transform -translate-x-[100vw] md:translate-x-0">
+          <section
+            ref={mainSideRef}
+            className="containera bg-primary py-4 w-5/6 absolute md:static top-0 bottom-0 md:px-2 md:w-auto flex flex-col items-center md:translate-x-0">
+            <div className="team flex items-center gap-x-2 bg-gray-600 p-4 w-5/6 md:w-auto rounded-sm box-border select-none">
+              <img
+                width={44}
+                height={44}
+                src="/images/examples/kotlin.png"
+                className="flex-shrink-0"
+                alt=""
+              />
+              <div className="team-info">
+                <h3 className="m-0 text-primary">Kotlin Workspace</h3>
+                <span className="text-secondary">Team</span>
+              </div>
+              <div className="change-team">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="28"
+                  height="44"
+                  viewBox="0 0 28 44"
+                  fill="none">
+                  <path
+                    d="M7.88 14.88L14 8.77333L20.12 14.88L22 13L14 5L6 13L7.88 14.88Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M7.88 28.5652L14 35.0148L20.12 28.5652L22 30.5508L14 39L6 30.5508L7.88 28.5652Z"
+                    fill="white"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div className="project w-5/6 text-left">
+              <h4 className="text-secondary">Home</h4>
+              <ul className="pl-0">
+                <li className="list-none">
+                  <Link href="/u">
+                    <a className="text-dark-secondary bg-accent p-4 rounded-md flex items-center justify-between no-underline">Home</a>
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div className="project w-5/6 text-left">
+              <h4 className="text-secondary">Projects</h4>
+              <ul className="pl-0">
+                <li
+                  onClick={viewProject}
+                  className="list-none cursor-pointer bg-accent p-4 rounded-md flex items-center justify-between">
+                  <span className="text-dark-primary">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      className="align-middle"
+                      fill="none">
+                      <path
+                        d="M17.7363 6.89649L12.7773 6.17579L10.5605 1.68165C10.5 1.5586 10.4004 1.45899 10.2773 1.39844C9.96875 1.2461 9.59375 1.37305 9.43945 1.68165L7.22265 6.17579L2.26367 6.89649C2.12695 6.91602 2.00195 6.98048 1.90625 7.07813C1.79055 7.19705 1.72679 7.35704 1.72899 7.52294C1.73119 7.68884 1.79916 7.84708 1.91797 7.9629L5.50586 11.4609L4.6582 16.4004C4.63832 16.5153 4.65104 16.6335 4.6949 16.7415C4.73877 16.8496 4.81203 16.9432 4.90638 17.0117C5.00073 17.0802 5.1124 17.1209 5.22871 17.1292C5.34502 17.1375 5.46133 17.113 5.56445 17.0586L10 14.7266L14.4355 17.0586C14.5566 17.1231 14.6973 17.1445 14.832 17.1211C15.1719 17.0625 15.4004 16.7402 15.3418 16.4004L14.4941 11.4609L18.082 7.9629C18.1797 7.8672 18.2441 7.74219 18.2637 7.60548C18.3164 7.26368 18.0781 6.94727 17.7363 6.89649Z"
+                        className="fill-dark-primary"
+                      />
+                    </svg>
+                    Projects
+                  </span>
+                  <span className="text-dark-primary">2</span>
+                </li>
+              </ul>
+            </div>
+          </section>
+          <section
+            ref={projectSideRef}
+            className="containera bg-[#313133] w-5/6 absolute md:static top-0 bottom-0 md:w-full transition-transform translate-x-[-100vw] md:translate-x-0">
             <div className="project-header bg-primary flex justify-between items-center py-4 px-2">
               <div className="project-header-title inline-flex">
                 <h1 className="inline-block align-middle m-0 mr-2 text-primary text-sm uppercase">
                   Projects
                 </h1>
-                <span className="inline-block text-secondary text-sm align-middle">(8)</span>
+                <span className="inline-block text-secondary text-sm align-middle">
+                  (8)
+                </span>
               </div>
               <div className="expandir-add inline-flex items-center">
-                <button className="p-2 bg-transparent border-none hover:bg-green-500/[.5] text-[0px] rounded">
+                <button
+                  onClick={modelProjectHandler}
+                  className="p-2 bg-transparent border-none hover:bg-green-500/[.5] text-[0px] rounded">
                   <svg
                     className="inline-block align-middle"
                     xmlns="http://www.w3.org/2000/svg"
@@ -51,7 +164,9 @@ export default function UserLayout({ children }) {
                       className="fill-primary"></path>
                   </svg>
                 </button>
-                <button className="p-2 bg-transparent border-none hover:bg-cyan-500/[.5] text-[0px] rounded md:hidden">
+                <button
+                  onClick={closeProjectSide}
+                  className="p-2 bg-transparent border-none hover:bg-cyan-500/[.5] text-[0px] rounded md:hidden">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"
@@ -75,23 +190,56 @@ export default function UserLayout({ children }) {
                 </button>
               </div>
             </div>
-            <div className="team-list bg-secondary">
+            <div className="team-list flex flex-col gap-y-4 bg-secondary">
               {!loading &&
                 !error &&
-                data.getTeams.map((team, index) => {
+                team.map((team, index) => {
                   return (
                     <LayoutListTeam
-                      key={team.full_name + index}
-                      name={team.full_name}
+                      key={team.name + index}
+                      name={team.name}
                       projects={team.projects}
                     />
                   );
                 })}
             </div>
-          </div>
+          </section>
         </section>
         {children}
       </main>
+      <div
+        ref={modalRef}
+        className="modal hidden fixed bg-black/[.7] top-[45px] left-0 w-full h-[calc(100vh_-_45px)] items-center justify-center">
+        <form className="bg-primary rounded-lg p-4">
+          <h3 className="text-secondary">Ingrese Nombre del proyecto</h3>
+          <input
+            name="projectName"
+            className="p-2 rounded-md w-full box-border"
+            type="text"
+            placeholder="Ingrese el nombre del proyecto"
+          />
+          <h3 className="text-secondary">Description</h3>
+          <input
+            name="projectDescription"
+            className="p-2 rounded-md w-full box-border"
+            type="text"
+            placeholder="Ingrese la descripción del proyecto"
+          />
+          <div className="project-option flex gap-x-2 items-center">
+            <button
+              type="submit"
+              className="block bg-blue-700 py-2 px-4 rounded-md text-secondary mt-4 border-none">
+              Save
+            </button>
+            <button
+              onClick={closeModal}
+              type="button"
+              className="block bg-red-700 py-2 px-4 rounded-md text-secondary mt-4 border-none">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </>
   );
 }

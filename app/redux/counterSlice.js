@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   teamList: [],
   currentUser: {},
+  currentTeam: {},
   users: [
     {
       image: "/images/examples/user.png",
@@ -27,11 +28,14 @@ export const projectSlice = createSlice({
     setUser: (state,action) => {
       console.log('cambiando el estado')
       state.currentUser = action.payload;
+    },
+    setCurrentTeam: (state,action) => {
+      state.currentTeam = action.payload;
     }
   },
 });
 
-export const { setTeams, setProject, setUser } = projectSlice.actions;
+export const { setTeams, setProject, setUser, setCurrentTeam } = projectSlice.actions;
 
 
 export const selectProject = (state, projectName) => {
@@ -42,6 +46,8 @@ export const selectProject = (state, projectName) => {
 }
 
 export const selectProjects = (state) => state.projects;
+
+export const selectCurrentTeam = (state) => state.currentTeam;
 
 export const selectUser = (state) => state.team.currentUser;
 

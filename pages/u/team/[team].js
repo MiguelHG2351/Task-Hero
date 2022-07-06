@@ -10,10 +10,32 @@ import MenuProject from "components/pages/Project/MenuProject";
 import CardList from "components/pages/Project/CardList";
 import authentication from "app/server/authentication";
 import { useAppDispatch } from "app/hook";
-import { setUser } from "app/redux/counterSlice";
+import { setUser, setCurrentTeam, setTeams } from "app/redux/counterSlice";
+import { GET_PROJECTS } from "app/apollo/projects";
+import { useQuery } from "@apollo/client";
+import { useRouter } from "next/router";
 
 export default function Home({ user }) {
+  const router = useRouter()
   const dispatch = useAppDispatch();
+  const { loading, error, data } = useQuery(GET_PROJECTS, {
+    variables: {
+      userId: user.id,
+      skip: 0,
+      take: 2,
+    },
+    onCompleted: (data) => {
+      const find = data.getTeams.find((team) => team.id === router.query?.team)
+      console.log(data)
+      if(data.getTeams.length > 0 && find) {
+        console.log("data", data);
+        dispatch(setTeams(data.getTeams));
+        dispatch(setCurrentTeam(find));
+      } else {
+        router.push("/u" )
+      }
+    },
+  });
   dispatch(setUser(user));
 
   return (
@@ -26,10 +48,6 @@ export default function Home({ user }) {
           <MenuProject name={"xD"} />
         </LayoutGroup>
         <CardList />
-        <div className="login">
-          <button onClick={() => signIn()}>Login</button>
-          <button onClick={() => signOut()}>Logout</button>
-        </div>
       </section>
     </>
   );

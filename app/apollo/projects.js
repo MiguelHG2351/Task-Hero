@@ -22,3 +22,25 @@ export const GET_PROJECTS = gql`
     }
   }
 `;
+
+export const GET_TEAM = gql`
+  query Query($getTeamId: String!) {
+    getTeam(id: $getTeamId) {
+      full_name
+      id
+      projects {
+        name
+        description
+      }
+    }
+  }
+`;
+
+export const CREATE_TEAM = gql`
+  mutation CreateTeam($data: TeamInput!) {
+    createTeam(data: $data) {
+      full_name
+      vaultId
+    }
+  }
+`;

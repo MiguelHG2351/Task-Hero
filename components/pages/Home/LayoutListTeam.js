@@ -1,10 +1,11 @@
-import HomeListProject from "components/pages/Home/HomeListProject";
+import { useRouter } from "next/router";
 
-export default function LayoutListTeam({ name, projects }) {
-  console.log(projects);
+export default function LayoutListTeam({ name, projects=[] }) {
+    const router = useRouter()
+  console.log(router.query);
 
   return (
-    <section className="team-item py-4 px-2 box-border gap-x-3 flex items-center justify-between bg-accent">
+    <section className="team-item py-4 px-2 box-border gap-x-3 gap-y-3 flex items-center justify-between bg-accent">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="20"
