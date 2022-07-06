@@ -10,9 +10,10 @@ export default function MenuProject({ name }) {
           media="(min-width: 768px)"
         />
         <Image
-          className="inline-block align-middle w-full"
+          className="inline-block align-middle w-full h-20"
           src="/images/examples/background-project.png"
           alt="imagen"
+          priority
         />
       </picture>
       <div className="project-info grid grid-cols-[minmax(0,_1fr)_min-content] justify-between items-center p-2 px-3">

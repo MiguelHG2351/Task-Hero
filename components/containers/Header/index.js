@@ -1,11 +1,15 @@
 
-export default function Header(){
+export default function Header({ sidenavRef }){
+    function openSidenav() {
+        sidenavRef.current.classList.toggle('-translate-x-[100vw]');
+    }
+    
     return (
         <>
             <header className="bg-dark-mode m-auto border-b border-gray-100 p-2">
                 <div className="header-mobile flex justify-between">
                     <div className="header-menu">
-                        <button className="btn-menu bg-transparent border-none">
+                        <button onClick={openSidenav} className="btn-menu bg-transparent border-none md:hidden">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                 <path className="fill-primary" d="M3.60001 18H20.4V15.6H3.60001V18ZM3.60001 6V8.4H20.4V6H3.60001ZM3.60001 13.2H20.4V10.8H3.60001V13.2Z"/>
                             </svg>

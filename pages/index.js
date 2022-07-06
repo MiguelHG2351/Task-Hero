@@ -22,7 +22,7 @@ export async function getServerSideProps(context) {
         }
     } else {
         return {
-            redirect: { destination: '/u/home' }
+            redirect: { destination: '/u' }
         }
     }
 }
