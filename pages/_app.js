@@ -18,12 +18,12 @@ export default function App({
   router,
 }) {
   const url = `https://taskhero.miguel2351.me/${router.route}`;
-  const apolloClient = useApollo(pageProps.initialApolloState)
+  const apolloClient = useApollo(pageProps.initialApolloState);
 
   return (
-    <ApolloProvider client={apolloClient}>
-      <ReduxProvider store={store}>
-        <SessionProvider session={session}>
+    <SessionProvider session={session}>
+      <ApolloProvider client={apolloClient}>
+        <ReduxProvider store={store}>
           <AnimatePresence
             exitBeforeEnter
             initial={false}
@@ -36,8 +36,8 @@ export default function App({
               <Component {...pageProps} canonical={url} key={url} />
             )}
           </AnimatePresence>
-        </SessionProvider>
-      </ReduxProvider>
-    </ApolloProvider>
+        </ReduxProvider>
+      </ApolloProvider>
+    </SessionProvider>
   );
 }
