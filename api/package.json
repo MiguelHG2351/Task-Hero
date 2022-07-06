@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.ts",
-    "build": "npm run clean && tsc --build && npm run copyfiles",
+    "build": "npm run clean && npm run generate && tsc --build && npm run copyfiles",
     "clean": "rimraf ../dist/api",
     "copyfiles": "copyfiles ./src/models/*.graphql public/* ../dist/api/",
     "start": "node ../dist/api/",
