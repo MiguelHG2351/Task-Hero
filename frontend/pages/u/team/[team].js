@@ -8,10 +8,10 @@ import { LayoutGroup } from "framer-motion";
 import Layout from "components/containers/Layout/UserLayout";
 import MenuProject from "components/pages/Project/MenuProject";
 import CardList from "components/pages/Project/CardList";
-import authentication from "app/server/authentication";
-import { useAppDispatch } from "app/hook";
-import { setUser, setCurrentTeam, setTeams } from "app/redux/counterSlice";
-import { GET_PROJECTS } from "app/apollo/projects";
+import authentication from "frontend/app/server/authentication";
+import { useAppDispatch } from "frontend/app/hook";
+import { setUser, setCurrentTeam, setTeams } from "frontend/app/redux/counterSlice";
+import { GET_PROJECTS } from "frontend/app/apollo/projects";
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 

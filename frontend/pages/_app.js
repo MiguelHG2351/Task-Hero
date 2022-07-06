@@ -6,7 +6,7 @@ import { AnimatePresence } from "framer-motion";
 import "../styles/global.css";
 
 import store from "../lib/redux";
-import { useApollo } from "lib/apollo";
+import { useApollo } from "frontend/lib/apollo";
 
 /**
  *

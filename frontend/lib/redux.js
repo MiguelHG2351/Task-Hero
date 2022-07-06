@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 // import { useDispatch } from 'react-redux'
 
-import counterReducer from '../app/redux/counterSlice'
+import counterReducer from 'app/redux/counterSlice'
 
 export function makeStore() {
     return configureStore({
