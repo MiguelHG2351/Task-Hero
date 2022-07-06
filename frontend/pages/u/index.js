@@ -1,13 +1,13 @@
 import Head from 'next/head';
 
-import { useAppDispatch } from 'app/hook';
-import { setTeams, setUser } from 'app/redux/counterSlice';
+import { useAppDispatch } from 'frontend/app/hook';
+import { setTeams, setUser } from 'frontend/app/redux/counterSlice';
 
 import Layout from "components/containers/Layout/HomeLayout/index";
-import authentication from 'app/server/authentication';
+import authentication from 'frontend/app/server/authentication';
 import TeamList from 'components/pages/Home/TeamList';
 import { useQuery } from '@apollo/client';
-import { GET_PROJECTS } from 'app/apollo/projects';
+import { GET_PROJECTS } from 'frontend/app/apollo/projects';
 
 export default function U({ user }) {
     const dispatch = useAppDispatch();

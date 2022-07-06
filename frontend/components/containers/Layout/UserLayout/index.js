@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { useAppSelector } from "app/hook";
+import { useAppSelector } from "frontend/app/hook";
 import {
   selectCurrentTeam,
   selectUser
-} from "app/redux/counterSlice";
+} from "frontend/app/redux/counterSlice";
 
 import { useQuery } from "@apollo/client";
-import { GET_PROJECTS } from "app/apollo/projects";
+import { GET_PROJECTS } from "frontend/app/apollo/projects";
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 
