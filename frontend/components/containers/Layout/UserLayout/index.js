@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { useAppSelector } from "frontend/app/hook";
+import { useAppSelector } from "app/hook";
 import {
   selectCurrentTeam,
   selectUser
-} from "frontend/app/redux/counterSlice";
+} from "app/redux/counterSlice";
 
 import { useQuery } from "@apollo/client";
-import { GET_PROJECTS } from "frontend/app/apollo/projects";
+import { GET_PROJECTS } from "app/apollo/projects";
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 
@@ -24,16 +24,17 @@ export default function UserLayout({ children }) {
   const currentTeam = useAppSelector(selectCurrentTeam);
   const [team, setTeams] = useState([]);
 
-  console.log("Team", currentTeam);
   const { loading, error, data } = useQuery(GET_PROJECTS, {
     variables: {
       userId: selector.id,
       skip: 0,
       take: 2,
     },
+    nextFetchPolicy(currentFetchPolicy) {
+      return currentFetchPolicy;
+    },
     onCompleted: (data) => {
       const find = data.getTeams.find((team) => team.id === router.query.team);
-      console.log("list of project");
       if (find === undefined) {
         router.push("/u");
       } else {

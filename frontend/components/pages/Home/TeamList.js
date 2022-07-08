@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 export default function TeamList({ teamId, name, projects = [], vault = [], user=[] }) {
-  console.log(vault)
   
   return (
     <Link href={`/u/team/${teamId}`}>

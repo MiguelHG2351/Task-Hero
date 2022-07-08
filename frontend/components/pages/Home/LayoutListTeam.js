@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 
 export default function LayoutListTeam({ name, projects=[] }) {
     const router = useRouter()
-  console.log(router.query);
 
   return (
     <section className="team-item py-4 px-2 box-border gap-x-3 gap-y-3 flex items-center justify-between bg-accent">

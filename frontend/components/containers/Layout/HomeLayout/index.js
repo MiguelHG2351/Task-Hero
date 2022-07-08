@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { useRef } from "react";
 import { useMutation } from "@apollo/client";
-import { CREATE_TEAM } from "frontend/app/apollo/projects";
-import { useAppSelector } from "frontend/app/hook";
-import { selectUser } from "frontend/app/redux/counterSlice";
+import { CREATE_TEAM } from "app/apollo/projects";
+import { useAppSelector } from "app/hook";
+import { selectUser } from "app/redux/counterSlice";
 
 import Header from "../../Header";
 
@@ -26,9 +26,7 @@ export default function HomeLayout({ children }) {
   function formTeam(e) {
     e.preventDefault();
     const formData = new FormData(e.target)
-
-    console.log('El nombre es ', formData.get("projectDescription"))
-    console.log('El errro se debe a que ', error)
+    
     mutateFunction({
       variables: {
         "userId": selector.id,

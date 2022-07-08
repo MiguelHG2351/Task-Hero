@@ -10,7 +10,7 @@ export default function MenuProject({ name }) {
           media="(min-width: 768px)"
         />
         <Image
-          className="inline-block align-middle w-full h-20"
+          className="inline-block align-middle w-full h-20 object-cover"
           src="/images/examples/background-project.png"
           alt="imagen"
           priority

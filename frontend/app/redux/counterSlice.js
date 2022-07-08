@@ -26,7 +26,6 @@ export const projectSlice = createSlice({
       state.currentProject = action.payload;
     },
     setUser: (state,action) => {
-      console.log('cambiando el estado')
       state.currentUser = action.payload;
     },
     setCurrentTeam: (state,action) => {

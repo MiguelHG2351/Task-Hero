@@ -24,5 +24,5 @@ jobs:
         with:
           node-version: '16.15.1'
       - run: npm install
-      - run: npx prisma generate
-      - run: npx prisma db push
+      - run: npx -w frontend prisma generate
+      - run: npx -w frontend prisma db push
