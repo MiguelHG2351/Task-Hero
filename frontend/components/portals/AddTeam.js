@@ -20,7 +20,11 @@ const AddTeam = ({ setShowModal, show, refetch }) => {
         }
     );
 
-    const [mutateFunction, { data, loading, error }] = useMutation(CREATE_TEAM);
+    const [mutateFunction, { data, loading, error }] = useMutation(CREATE_TEAM, {
+        onCompleted(data) {
+            refetch()
+        }
+    });
 
     async function formTeam(e) {
         e.preventDefault();

@@ -23,6 +23,9 @@ const AddProject = ({ setShowModal, show, refetch }) => {
         useMutation(CREATE_PROJECT, {
             onQueryUpdated(observableQuery) {
                 return observableQuery.refetch();
+            },
+            onCompleted(data) {
+                refetch();
             }
         });
 
