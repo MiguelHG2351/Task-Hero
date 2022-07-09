@@ -31,6 +31,9 @@ export const projectSlice = createSlice({
       state.currentUser = action.payload;
     },
     setCurrentTeam: (state,action) => {
+      if(action.payload) {
+        window.localStorage.setItem("currentTeam", JSON.stringify(action.payload));
+      }
       state.currentTeam = action.payload;
     }
   },
@@ -47,6 +50,8 @@ export const selectProject = (state, projectName) => {
 }
 
 export const selectProjects = (state) => state.projects;
+
+export const selectTeams = (state) => state.team.teamList;
 
 export const selectCurrentTeam = (state) => state.team.currentTeam
 

@@ -67,7 +67,11 @@ export const querys = {
     async getProject(root: unknown, args: { id: string }, context: context): Promise<Project | null> {
         const project= await context.orm.project.findFirst({
             where: {
-                teamId: args.id,
+                id: args.id,
+            },
+            include: {
+                tables: true,
+                team: true
             }
         });
         

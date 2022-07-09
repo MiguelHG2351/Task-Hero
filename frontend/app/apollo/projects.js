@@ -1,47 +1,58 @@
 import { gql } from "@apollo/client";
 
 export const GET_PROJECTS = gql`
-  query GetTeams($userId: String, $skip: Int, $take: Int) {
-    getTeams(userId: $userId, skip: $skip, take: $take) {
-      full_name
-      image
-      id
-      vaulTeam {
-        secrets {
-          name
-          value
+    query GetTeams($userId: String, $skip: Int, $take: Int) {
+        getTeams(userId: $userId, skip: $skip, take: $take) {
+            full_name
+            image
+            id
+            vaulTeam {
+                secrets {
+                    name
+                    value
+                }
+            }
+            projects {
+                id
+                name
+                description
+            }
+            TeamAndUser {
+                userId
+                role
+            }
         }
-      }
-      projects {
-        name
-        description
-      }
-      TeamAndUser {
-        userId
-        role
-      }
     }
-  }
 `;
 
 export const GET_TEAM = gql`
-  query Query($getTeamId: String!) {
-    getTeam(id: $getTeamId) {
-      full_name
-      id
-      projects {
-        name
-        description
-      }
+    query Query($getTeamId: String!) {
+        getTeam(id: $getTeamId) {
+            full_name
+            id
+            projects {
+                id
+                name
+                description
+            }
+        }
     }
-  }
 `;
 
 export const CREATE_TEAM = gql`
-  mutation Mutation($data: TeamInput!) {
-    createTeam(data: $data) {
-      full_name,
-      image
+    mutation Mutation($data: TeamInput!) {
+        createTeam(data: $data) {
+            full_name
+            image
+        }
     }
-  }
+`;
+
+export const CREATE_PROJECT = gql`
+    mutation CreateProject($data: ProjectInput!) {
+        createProject(data: $data) {
+            description
+            name
+        }
+    }
 `;

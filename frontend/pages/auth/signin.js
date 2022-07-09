@@ -5,10 +5,16 @@ import {
   getSession,
   getCsrfToken,
 } from "next-auth/react";
+import { useEffect } from "react";
 
 import AuthLayout from "components/containers/Layout/AuthLayout";
 
 export default function Signin({ providers }) {
+
+  useEffect(() => {
+    localStorage.clear();
+  }, [])
+
   return (
     <>
       <Head>

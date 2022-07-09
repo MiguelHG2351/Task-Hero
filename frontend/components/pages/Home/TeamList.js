@@ -4,7 +4,7 @@ export default function TeamList({ teamId, name, projects = [], vault = [], user
   
   return (
     <Link href={`/u/team/${teamId}`}>
-      <a className="block bg-secondary px-2 rounded-md hover:scale-105 transition-transform">
+      <a className="block bg-secondary px-2 rounded-md hover:scale-105 transition-transform no-underline">
         <div className="team-title flex items-center justify-between">
           <h3 className="text-secondary select-none">{name}</h3>
           <span className="text-secondary text-sm select-none">Miembro</span>

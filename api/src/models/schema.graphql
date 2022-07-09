@@ -37,6 +37,7 @@ type TeamAndUser {
 type Project {
   id:          String  
   description: String
+  image:       String
   name:        String
   teamId:      String
   team:        Team
@@ -145,6 +146,7 @@ input TeamInput {
 input ProjectInput {
   id: String
   description: String
+  image: String
   name: String
   teamId: String
 }

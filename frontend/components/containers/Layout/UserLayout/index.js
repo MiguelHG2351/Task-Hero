@@ -1,26 +1,34 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import Image from "next/future/image";
 
+import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { GET_PROJECTS } from "app/apollo/projects";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useAppSelector } from "app/hook";
 import {
     setTeams as reduxSetTeams,
     setCurrentTeam,
-	setUser,
-    selectCurrentTeam
+    setUser,
+    selectCurrentTeam,
 } from "app/redux/counterSlice";
 import { useAppDispatch } from "app/hook";
 
 import Header from "../../Header";
 import LayoutListTeam from "components/pages/Home/LayoutListTeam";
 import AddTeam from "components/portals/AddTeam";
+import classNames from "classnames";
 
 const AddProject = dynamic(() => import("components/portals/AddProject"), {
     suspense: true,
 });
+
+const breadcrumbs = {
+    "/u": { title: "Medios de Contacto", name: "Contáctanos" },
+    "/u/team": { title: "Novedades", name: "Actualizaciones" },
+};
 
 export default function UserLayout({ children }) {
     const session = useSession();
@@ -28,25 +36,20 @@ export default function UserLayout({ children }) {
     const mainSideRef = useRef(null);
     const dispatch = useAppDispatch();
     const projectSideRef = useRef(null);
+    const currentTeam = useAppSelector(selectCurrentTeam);
     const [team, setTeams] = useState([]);
-    const selector = useAppSelector(selectCurrentTeam);
-
     const [showTeamModal, setShowTeamModal] = useState(false);
     const [showProjectModal, setShowProjectModal] = useState(false);
+    const [changeTeam, setChangeTeam] = useState(false);
+    const changeTeamClass = classNames(
+        "teamSidenavList absolute left-0 top-full right-0 bg-secondary",
+        {
+            hidden: !changeTeam,
+        }
+    );
 
-    const [getTeams, { loading, error, data, refetch }] = useLazyQuery(GET_PROJECTS, {
-		onCompleted: (data) => {
-			const getTeamOfLocalStorage = localStorage.getItem("currentTeam");
-			setTeams(data.getTeams);
-            dispatch(reduxSetTeams(data.getTeams));
-            if (data.getTeams.length > 0 && !getTeamOfLocalStorage ) {
-                dispatch(setCurrentTeam(data.getTeams[0]));
-            }
-            if (typeof getTeamOfLocalStorage === 'string') {
-                dispatch(setCurrentTeam(JSON.parse(getTeamOfLocalStorage)));
-            }
-        },
-    });
+    const [getTeams, { loading, error, data, refetch }] =
+        useLazyQuery(GET_PROJECTS);
     useEffect(() => {
         if (session.status === "authenticated") {
             getTeams({
@@ -56,9 +59,33 @@ export default function UserLayout({ children }) {
                     take: 2,
                 },
             });
-			dispatch(setUser(session.data.user));
+            dispatch(setUser(session.data.user));
         }
     }, [session]);
+
+    useEffect(() => {
+        if (data) {
+            console.log("fetch");
+            const getTeamOfLocalStorage = localStorage.getItem("currentTeam");
+            setTeams(data.getTeams);
+            dispatch(reduxSetTeams(data.getTeams));
+            if (data.getTeams.length > 0 && !getTeamOfLocalStorage) {
+                dispatch(setCurrentTeam(data.getTeams[0]));
+            }
+            if (typeof getTeamOfLocalStorage === "string") {
+                try {
+                    const parseLocalStorage = JSON.parse(getTeamOfLocalStorage);
+                    const findProject = data.getTeams.find(
+                        (team) => team.id === parseLocalStorage.id
+                    );
+                    console.log("find project", data.getTeams);
+                    dispatch(setCurrentTeam(findProject));
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        }
+    }, [data]);
 
     function viewProject() {
         mainSideRef.current.classList.add("translate-x-[-100vw]");
@@ -70,6 +97,12 @@ export default function UserLayout({ children }) {
         projectSideRef.current.classList.add("translate-x-[-100vw]");
     }
 
+    function changeTeamHandler(team, dom) {
+        dispatch(setCurrentTeam(team));
+        setChangeTeam(false);
+    }
+    console.log("currentTeam", currentTeam);
+
     return (
         <>
             <Header sidenavRef={sidenavRef} />
@@ -80,57 +113,143 @@ export default function UserLayout({ children }) {
                 >
                     <section
                         ref={mainSideRef}
-                        className="containera bg-primary py-4 w-5/6 absolute md:static top-0 bottom-0 md:px-2 md:w-auto flex flex-col items-center md:translate-x-0"
+                        className="containera bg-primary py-4 w-5/6 absolute md:static top-0 bottom-0 md:px-2 md:w-auto flex flex-col items-center md:translate-x-0 border-dark-primary border-0 border-r-dark-gray md:border-r-0.5 border-solid"
                     >
-						{(!loading &&  data?.getTeams.length > 0) && 
-                        <div className="team flex items-center gap-x-2 bg-gray-600 py-4 px-5 w-5/6 md:w-auto rounded-sm box-border select-none">
-                            <img
-                                width={44}
-                                height={44}
-                                src={selector.image}
-                                className="flex-shrink-0"
-                                alt=""
-                            />
-                            <div className="team-info">
-                                <h3 title="Kotlin Workspace" className="m-0 text-primary whitespace-nowrap w-[14ch] overflow-hidden text-ellipsis">
-                                    {selector.full_name}
-                                </h3>
-                                <span className="text-secondary">Team</span>
-                            </div>
-                            <div className="change-team">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="28"
-                                    height="44"
-                                    viewBox="0 0 28 44"
-                                    fill="none"
+                        {!loading && currentTeam?.id && (
+                            <div className="team relative flex items-center gap-x-2 bg-gray-600 py-4 px-5 w-5/6 md:w-auto rounded-sm box-border select-none">
+                                <img
+                                    width={44}
+                                    height={44}
+                                    src={currentTeam.image}
+                                    className="flex-shrink-0"
+                                    alt=""
+                                />
+                                <div className="team-info">
+                                    <h3
+                                        title="Kotlin Workspace"
+                                        className="m-0 text-primary whitespace-nowrap w-[14ch] overflow-hidden text-ellipsis"
+                                    >
+                                        {currentTeam.full_name}
+                                    </h3>
+                                    <span className="text-secondary">Team</span>
+                                </div>
+                                <div
+                                    className="change-team cursor-pointer hover:bg-secondary"
+                                    onClick={() => setChangeTeam(!changeTeam)}
                                 >
-                                    <path
-                                        d="M7.88 14.88L14 8.77333L20.12 14.88L22 13L14 5L6 13L7.88 14.88Z"
-                                        fill="white"
-                                    />
-                                    <path
-                                        d="M7.88 28.5652L14 35.0148L20.12 28.5652L22 30.5508L14 39L6 30.5508L7.88 28.5652Z"
-                                        fill="white"
-                                    />
-                                </svg>
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="28"
+                                        height="44"
+                                        viewBox="0 0 28 44"
+                                        fill="none"
+                                    >
+                                        <path
+                                            d="M7.88 14.88L14 8.77333L20.12 14.88L22 13L14 5L6 13L7.88 14.88Z"
+                                            fill="white"
+                                        />
+                                        <path
+                                            d="M7.88 28.5652L14 35.0148L20.12 28.5652L22 30.5508L14 39L6 30.5508L7.88 28.5652Z"
+                                            fill="white"
+                                        />
+                                    </svg>
+                                </div>
+                                <div className={changeTeamClass}>
+                                    <div className="title">
+                                        <h5 className="text-secondary text-lg text-center m-0 p-2">
+                                            Team List
+                                        </h5>
+                                    </div>
+                                    <div className="sidenavListTeam px-2">
+                                        <h5 className="text-secondary my-2">
+                                            Team
+                                        </h5>
+                                        <ul className="px-1">
+                                            {team.length > 0 &&
+                                                team.map((_team) => (
+                                                    <li
+                                                        key={
+                                                            _team.full_name +
+                                                            _team.id
+                                                        }
+                                                        onClick={(e) =>
+                                                            changeTeamHandler(
+                                                                _team
+                                                            )
+                                                        }
+                                                        className="p-2 hover:bg-primary text-secondary list-none"
+                                                    >
+                                                        <Image
+                                                            className="align-middle mr-1"
+                                                            src={_team.image}
+                                                            alt={
+                                                                _team.full_name
+                                                            }
+                                                            width="18"
+                                                            height="18"
+                                                        />
+                                                        <span>
+                                                            {_team.full_name}
+                                                        </span>
+                                                    </li>
+                                                ))}
+                                        </ul>
+                                        <button
+                                            onClick={() =>
+                                                setShowTeamModal(true)
+                                            }
+                                            className="p-2 mb-2 bg-transparent border-none hover:bg-primary rounded text-secondary text-left w-full"
+                                        >
+                                            <svg
+                                                className="inline-block align-middle"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 16 16"
+                                                fill="none"
+                                            >
+                                                <path
+                                                    d="M12.6667 8.66666H8.66666V12.6667H7.33333V8.66666H3.33333V7.33333H7.33333V3.33333H8.66666V7.33333H12.6667V8.66666Z"
+                                                    className="fill-primary"
+                                                ></path>
+                                            </svg>
+                                            <span>Add Team</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>}
-						{
-							(!loading && data?.getTeams.length === 0) &&
-							<div className="addTeam py-4 px-5 bg-gray-600 flex flex-col items-center gap-y-4">
-								<button onClick={() => setShowTeamModal(true)} className="whitespace-nowrap w-full p-2 bg-transparent text-secondary border-dashed border-secondary">
-									Agregar un team
-								</button>
-								<span className="whitespace-nowrap text-sm text-secondary">Aún no formas parte de un team</span>
-							</div>
-						}
+                        )}
+                        {!loading && data?.getTeams.length === 0 && (
+                            <div className="addTeam py-4 px-5 bg-gray-600 flex flex-col items-center gap-y-4">
+                                <button
+                                    onClick={() => setShowTeamModal(true)}
+                                    className="whitespace-nowrap w-full p-2 bg-transparent text-secondary border-dashed border-secondary"
+                                >
+                                    Agregar un team
+                                </button>
+                                <span className="whitespace-nowrap text-sm text-secondary">
+                                    Aún no formas parte de un team
+                                </span>
+                            </div>
+                        )}
                         <div className="project w-5/6 text-left">
                             <h4 className="text-secondary">Home</h4>
                             <ul className="pl-0">
                                 <li className="list-none">
                                     <Link href="/u">
-                                        <a className="text-dark-secondary bg-accent p-4 rounded-md flex items-center justify-between no-underline">
+                                        <a className="text-dark-secondary bg-accent p-4 rounded-md flex items-center justify-start gap-x-1 no-underline">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="20"
+                                                height="20"
+                                                viewBox="0 0 20 20"
+                                                fill="none"
+                                            >
+                                                <path
+                                                    d="M8 17V11H12V17H17V9H20L10 0L0 9H3V17H8Z"
+                                                    className="fill-dark-primary"
+                                                />
+                                            </svg>
                                             Home
                                         </a>
                                     </Link>
@@ -138,7 +257,7 @@ export default function UserLayout({ children }) {
                             </ul>
                         </div>
                         <div className="project w-5/6 text-left">
-                            <h4 className="text-secondary">Projects</h4>
+                            <h4 className="text-secondary">Team</h4>
                             <ul className="pl-0">
                                 <li
                                     onClick={viewProject}
@@ -150,15 +269,21 @@ export default function UserLayout({ children }) {
                                             width="20"
                                             height="20"
                                             viewBox="0 0 20 20"
-                                            className="align-middle"
                                             fill="none"
+                                            className="align-middle mr-1"
                                         >
                                             <path
-                                                d="M17.7363 6.89649L12.7773 6.17579L10.5605 1.68165C10.5 1.5586 10.4004 1.45899 10.2773 1.39844C9.96875 1.2461 9.59375 1.37305 9.43945 1.68165L7.22265 6.17579L2.26367 6.89649C2.12695 6.91602 2.00195 6.98048 1.90625 7.07813C1.79055 7.19705 1.72679 7.35704 1.72899 7.52294C1.73119 7.68884 1.79916 7.84708 1.91797 7.9629L5.50586 11.4609L4.6582 16.4004C4.63832 16.5153 4.65104 16.6335 4.6949 16.7415C4.73877 16.8496 4.81203 16.9432 4.90638 17.0117C5.00073 17.0802 5.1124 17.1209 5.22871 17.1292C5.34502 17.1375 5.46133 17.113 5.56445 17.0586L10 14.7266L14.4355 17.0586C14.5566 17.1231 14.6973 17.1445 14.832 17.1211C15.1719 17.0625 15.4004 16.7402 15.3418 16.4004L14.4941 11.4609L18.082 7.9629C18.1797 7.8672 18.2441 7.74219 18.2637 7.60548C18.3164 7.26368 18.0781 6.94727 17.7363 6.89649Z"
+                                                fillRule="evenodd"
+                                                clipRule="evenodd"
+                                                d="M2.5 6.96665L9.375 9.85832V17.5H9.325L3.33333 14.675C3.08808 14.5653 2.87931 14.3878 2.73166 14.1634C2.584 13.9389 2.50362 13.6769 2.5 13.4083V6.96665ZM10.625 17.5V9.85832L17.5 6.96665V13.4167C17.4948 13.6839 17.4137 13.9441 17.2661 14.1669C17.1186 14.3897 16.9106 14.5659 16.6667 14.675L10.6667 17.5H10.625Z"
+                                                className="fill-dark-primary"
+                                            />
+                                            <path
+                                                d="M10 8.74999L17.0917 5.77499C16.9723 5.64239 16.8279 5.53476 16.6667 5.45832L10.6667 2.64999C10.4583 2.55135 10.2306 2.50018 10 2.50018C9.76943 2.50018 9.54174 2.55135 9.33333 2.64999L3.33333 5.45832C3.17213 5.53476 3.02768 5.64239 2.90833 5.77499L10 8.74999Z"
                                                 className="fill-dark-primary"
                                             />
                                         </svg>
-                                        Projects
+                                        <span>Projects</span>
                                     </span>
                                     <span className="text-dark-primary">
                                         {team.length}
@@ -166,10 +291,34 @@ export default function UserLayout({ children }) {
                                 </li>
                             </ul>
                         </div>
+                        <div className="user-option w-5/6 text-left">
+                            <h4 className="text-secondary">User</h4>
+                            <ul className="pl-0">
+                                <li
+                                    onClick={() => signOut()}
+                                    className="list-none cursor-pointer bg-accent p-4 rounded-md flex items-center justify-start"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 20 20"
+                                        fill="none"
+                                        className="align-middle"
+                                    >
+                                        <path
+                                            d="M10 4.99998C10.9167 4.99998 11.6667 5.74998 11.6667 6.66665C11.6667 7.58331 10.9167 8.33331 10 8.33331C9.08334 8.33331 8.33334 7.58331 8.33334 6.66665C8.33334 5.74998 9.08334 4.99998 10 4.99998ZM10 13.3333C12.25 13.3333 14.8333 14.4083 15 15H5.00001C5.19168 14.4 7.75834 13.3333 10 13.3333ZM10 3.33331C8.15834 3.33331 6.66668 4.82498 6.66668 6.66665C6.66668 8.50831 8.15834 9.99998 10 9.99998C11.8417 9.99998 13.3333 8.50831 13.3333 6.66665C13.3333 4.82498 11.8417 3.33331 10 3.33331ZM10 13.3333C7.77501 13.3333 3.33334 14.45 3.33334 16.6666V18.3333H16.6667V16.6666C16.6667 14.45 12.225 13.3333 10 13.3333Z"
+                                            className="fill-dark-primary"
+                                        />
+                                    </svg>
+                                    <span>Cerrar sesión</span>
+                                </li>
+                            </ul>
+                        </div>
                     </section>
                     <section
                         ref={projectSideRef}
-                        className="containera bg-[#313133] w-5/6 absolute md:static top-0 bottom-0 md:w-full transition-transform translate-x-[-100vw] md:translate-x-0"
+                        className="containera bg-[#313133] w-5/6 absolute md:static top-0 bottom-0 md:w-full transition-transform translate-x-[-100vw] md:translate-x-0 border-dark-primary border-0 border-r-dark-gray md:border-r-0.5 border-solid"
                     >
                         <div className="project-header bg-primary flex justify-between items-center py-4 px-2">
                             <div className="project-header-title inline-flex">
@@ -177,7 +326,9 @@ export default function UserLayout({ children }) {
                                     Projects
                                 </h1>
                                 <span className="inline-block text-secondary text-sm align-middle">
-                                    (8)
+                                    {!loading && currentTeam?.id
+                                        ? currentTeam.projects.length
+                                        : 0}
                                 </span>
                             </div>
                             <div className="expandir-add inline-flex items-center">
@@ -209,14 +360,14 @@ export default function UserLayout({ children }) {
                                 </button>
                             </div>
                         </div>
-                        <div className="team-list flex flex-col gap-y-4 bg-secondary">
-                            {!loading &&
-                                !error &&
-                                team.map((team, index) => {
+                        <div className="team-list flex flex-col bg-secondary">
+                            {currentTeam?.id &&
+                                currentTeam.projects.map((team, index) => {
                                     return (
                                         <LayoutListTeam
                                             key={team.name + index}
                                             name={team.name}
+                                            projectId={team.id}
                                             projects={team.projects}
                                         />
                                     );
@@ -243,8 +394,16 @@ export default function UserLayout({ children }) {
                     </section>
                 </section>
                 <Suspense>
-                    <AddProject refetch={refetch} setShowModal={setShowProjectModal} show={showProjectModal} />
-					<AddTeam refetch={refetch} setShowModal={setShowTeamModal} show={showTeamModal} />
+                    <AddProject
+                        refetch={refetch}
+                        setShowModal={setShowProjectModal}
+                        show={showProjectModal}
+                    />
+                    <AddTeam
+                        refetch={refetch}
+                        setShowModal={setShowTeamModal}
+                        show={showTeamModal}
+                    />
                 </Suspense>
                 {children}
             </main>
