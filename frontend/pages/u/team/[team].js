@@ -7,32 +7,42 @@ import { LayoutGroup } from "framer-motion";
 import Layout from "components/containers/Layout/UserLayout";
 import MenuProject from "components/pages/Project/MenuProject";
 import CardList from "components/pages/Project/CardList";
-import authentication from "app/server/authentication";
 import { useAppDispatch } from "app/hook";
 import { setCurrentTeam, setTeams } from "app/redux/counterSlice";
 import { GET_PROJECTS } from "app/apollo/projects";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 export default function Home({ user }) {
-  const router = useRouter()
+  const router = useRouter();
   const dispatch = useAppDispatch();
-  const { loading, error, data } = useQuery(GET_PROJECTS, {
-    variables: {
-      userId: user.id,
-      skip: 0,
-      take: 2,
-    },
+  const session = useSession();
+  const [getTeams, { loading, error, data }] = useLazyQuery(GET_PROJECTS, {
     onCompleted: (data) => {
-      const find = data.getTeams.find((team) => team.id === router.query?.team)
-      if(data.getTeams.length > 0 && find) {
+      const find = data.getTeams.find((team) => team.id === router.query?.team);
+      if (data.getTeams.length > 0 && find) {
         dispatch(setTeams(data.getTeams));
         dispatch(setCurrentTeam(find));
       } else {
-        router.push("/u" )
+        router.push("/u");
       }
     },
   });
+
+  useEffect(() => {
+    if (session.status === "authenticated") {
+      getTeams({
+        variables: {
+          userId: session.data.user.id,
+          //   userId: 'cl537msvk1652x07e9v169p9u',
+          skip: 0,
+          take: 2,
+        },
+      });
+    }
+  }, [session]);
 
   return (
     <>
@@ -50,19 +60,3 @@ export default function Home({ user }) {
 }
 
 Home.PageLayout = Layout;
-
-export async function getServerSideProps(context) {
-  const user = await authentication(context);
-
-  if (!user) {
-    return {
-      redirect: { destination: "/auth/signin" },
-    };
-  }
-
-  return {
-    props: {
-      user,
-    },
-  };
-}

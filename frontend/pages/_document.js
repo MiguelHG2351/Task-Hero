@@ -6,6 +6,7 @@ export default function Document() {
       <Head />
       <body>
         <Main />
+        <div id="modal"></div>
         <NextScript />
         <script strategy="afterInteractive" src="/scripts/dark-mode.js" />
       </body>

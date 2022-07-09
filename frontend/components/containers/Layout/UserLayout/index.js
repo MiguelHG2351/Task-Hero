@@ -1,17 +1,21 @@
 import Link from "next/link";
-import { useAppSelector } from "app/hook";
-import {
-  selectCurrentTeam,
-  selectUser
-} from "app/redux/counterSlice";
+import dynamic from "next/dynamic";
+// import { useAppSelector } from "app/hook";
+// import {
+//   selectUser
+// } from "app/redux/counterSlice";
 
 import { useQuery } from "@apollo/client";
 import { GET_PROJECTS } from "app/apollo/projects";
-import { useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import { useRouter } from "next/router";
 
 import Header from "../../Header";
 import LayoutListTeam from "components/pages/Home/LayoutListTeam";
+
+const AddProject = dynamic(() => import('components/portals/AddProject'), {
+  suspense: true,
+})
 
 
 export default function UserLayout({ children }) {
@@ -19,19 +23,16 @@ export default function UserLayout({ children }) {
   const sidenavRef = useRef(null);
   const mainSideRef = useRef(null);
   const projectSideRef = useRef(null);
-  const modalRef = useRef(null);
-  const selector = useAppSelector(selectUser);
-  const currentTeam = useAppSelector(selectCurrentTeam);
+  // const selector = useAppSelector(selectUser);
   const [team, setTeams] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+
 
   const { loading, error, data } = useQuery(GET_PROJECTS, {
     variables: {
-      userId: selector.id,
+      userId: 'cl537msvk1652x07e9v169p9u',
       skip: 0,
       take: 2,
-    },
-    nextFetchPolicy(currentFetchPolicy) {
-      return currentFetchPolicy;
     },
     onCompleted: (data) => {
       const find = data.getTeams.find((team) => team.id === router.query.team);
@@ -51,14 +52,6 @@ export default function UserLayout({ children }) {
   function closeProjectSide() {
     mainSideRef.current.classList.remove("translate-x-[-100vw]");
     projectSideRef.current.classList.add("translate-x-[-100vw]");
-  }
-
-  function modelProjectHandler() {
-    modalRef.current.classList.replace("hidden", "flex");
-  }
-
-  function closeModal(e) {
-    modalRef.current.classList.replace("flex", "hidden");
   }
 
   return (
@@ -151,21 +144,6 @@ export default function UserLayout({ children }) {
               </div>
               <div className="expandir-add inline-flex items-center">
                 <button
-                  onClick={modelProjectHandler}
-                  className="p-2 bg-transparent border-none hover:bg-green-500/[.5] text-[0px] rounded">
-                  <svg
-                    className="inline-block align-middle"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none">
-                    <path
-                      d="M12.6667 8.66666H8.66666V12.6667H7.33333V8.66666H3.33333V7.33333H7.33333V3.33333H8.66666V7.33333H12.6667V8.66666Z"
-                      className="fill-primary"></path>
-                  </svg>
-                </button>
-                <button
                   onClick={closeProjectSide}
                   className="p-2 bg-transparent border-none hover:bg-cyan-500/[.5] text-[0px] rounded md:hidden">
                   <svg
@@ -203,44 +181,29 @@ export default function UserLayout({ children }) {
                     />
                   );
                 })}
+                <button
+                  onClick={() => setShowModal(true)}
+                  className="p-2 bg-transparent border-none hover:bg-green-500/[.5] text-[0px] rounded">
+                  <svg
+                    className="inline-block align-middle"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none">
+                    <path
+                      d="M12.6667 8.66666H8.66666V12.6667H7.33333V8.66666H3.33333V7.33333H7.33333V3.33333H8.66666V7.33333H12.6667V8.66666Z"
+                      className="fill-primary"></path>
+                  </svg>
+                </button>
             </div>
           </section>
         </section>
+        <Suspense>
+          <AddProject setShowModal={setShowModal} show={showModal} />
+        </Suspense>
         {children}
       </main>
-      <div
-        ref={modalRef}
-        className="modal hidden fixed bg-black/[.7] top-[45px] left-0 w-full h-[calc(100vh_-_45px)] items-center justify-center">
-        <form className="bg-primary rounded-lg p-4">
-          <h3 className="text-secondary">Ingrese Nombre del proyecto</h3>
-          <input
-            name="projectName"
-            className="p-2 rounded-md w-full box-border"
-            type="text"
-            placeholder="Ingrese el nombre del proyecto"
-          />
-          <h3 className="text-secondary">Description</h3>
-          <input
-            name="projectDescription"
-            className="p-2 rounded-md w-full box-border"
-            type="text"
-            placeholder="Ingrese la descripción del proyecto"
-          />
-          <div className="project-option flex gap-x-2 items-center">
-            <button
-              type="submit"
-              className="block bg-blue-700 py-2 px-4 rounded-md text-secondary mt-4 border-none">
-              Save
-            </button>
-            <button
-              onClick={closeModal}
-              type="button"
-              className="block bg-red-700 py-2 px-4 rounded-md text-secondary mt-4 border-none">
-              Cancel
-            </button>
-          </div>
-        </form>
-      </div>
     </>
   );
 }

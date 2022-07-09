@@ -1,31 +1,40 @@
 import Head from 'next/head';
 
-import { useQuery } from '@apollo/client';
+import { useEffect } from 'react';
+import { useLazyQuery } from '@apollo/client';
 import { useSession } from 'next-auth/react';
 import { useAppDispatch } from 'app/hook';
 import { setTeams } from 'app/redux/counterSlice';
 import { GET_PROJECTS } from 'app/apollo/projects';
 
-import Layout from "components/containers/Layout/HomeLayout/index";
-import authentication from 'app/server/authentication';
+import Layout from "components/containers/Layout/UserLayout";
 import TeamList from 'components/pages/Home/TeamList';
 
 export default function U() {
     const grettings = `Hello Enrique!`;
-    const session =  useSession();
-
+    const session = useSession();
     const dispatch = useAppDispatch();
 
-    const { loading, error, data } = useQuery(GET_PROJECTS, {
-        variables: {
-          userId: 'cl537msvk1652x07e9v169p9u',
-          skip: 0,
-          take: 2,
-        },
+    const [getTeams, { loading, error, data }] = useLazyQuery(GET_PROJECTS, {
         onCompleted: (data) => {
           dispatch(setTeams(data.getTeams));
         },
     });
+
+    useEffect(() => {
+        if(session.status === 'authenticated') {
+            getTeams({
+                variables: {
+                      userId: session.data.user.id,
+                    //   userId: 'cl537msvk1652x07e9v169p9u',
+                      skip: 0,
+                      take: 2,
+                    }
+            });
+        }
+    }, [session])
+    console.log('loading?', loading);
+    console.log('session, data', session, data);
     
     return (
         <>
