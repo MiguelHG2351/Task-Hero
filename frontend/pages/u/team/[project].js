@@ -26,7 +26,10 @@ export default function Project() {
     const [categoryFilter, setCategoryFilter] = useState({
         Low: true,
         Medium: false,
-        High: true,
+        Hight: true,
+    });
+    const [tables, setTables] = useState({
+        getTables: []
     });
 
     useEffect(() => {
@@ -48,6 +51,15 @@ export default function Project() {
         }
     }, [router]);
 
+    useEffect(() => {
+        console.log('data is', data)
+        if (data?.getTables) {
+            setTables({
+                getTables: data.getTables,
+            })
+        }
+    }, [data]);
+
     return (
         <>
             <Head>
@@ -58,13 +70,15 @@ export default function Project() {
                     <MenuProject setCategoryFilter={setCategoryFilter} categoryFilter={categoryFilter} name={project?.name ?? "xD"} />
                 </LayoutGroup>
                 <section className="card-list px-4 py-4 bg-secondary md:flex md:gap-x-3 md:whitespace-nowrap md:overflow-x-auto">
-                    {(data?.getTables.length > 0) &&
-                        data.getTables.map((table) => {
+                    {(tables?.getTables.length > 0) &&
+                        tables.getTables.map((table) => {
                             return <CardList
                                 key={table.id}
                                 filters={categoryFilter}
                                 openModal={setShowCardModal}
                                 table={table}
+                                tables={tables.getTables}
+                                refetch={refetch}
                             />;
                         })}
                 </section>

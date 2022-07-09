@@ -64,6 +64,7 @@ export const GET_TABLES = gql`
             category
             id
             cards {
+                id
                 name
                 description
                 category
@@ -78,6 +79,15 @@ export const CREATE_CARD = gql`
             name
             description
             category
+        }
+    }
+`;
+
+export const MOVE_CARD = gql`
+    mutation MoveCard($data: moveCard!) {
+        moveCard(data: $data) {
+            name
+            description
         }
     }
 `;

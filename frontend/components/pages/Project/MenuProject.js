@@ -13,9 +13,9 @@ export default function MenuProject({ name, setCategoryFilter, categoryFilter })
     'bg-transparent': !categoryFilter.Medium,
   })
 
-  const HightClass = classNames('bg-dark-primary text-white border-none rounded px-2 py-2', {
-    'bg-dark-primary': categoryFilter.High,
-    'bg-transparent': !categoryFilter.High,
+  const HightClass = classNames('text-white border-none rounded px-2 py-2', {
+    'bg-dark-primary': categoryFilter.Hight,
+    'bg-transparent': !categoryFilter.Hight,
   })
 
   function setLowHandler() {
@@ -33,7 +33,7 @@ export default function MenuProject({ name, setCategoryFilter, categoryFilter })
   function setHighHandler() {
     setCategoryFilter({
       ...categoryFilter,
-      High: !categoryFilter.High,
+      Hight: !categoryFilter.Hight,
     })
   }
   

@@ -7,6 +7,7 @@ import { useAppSelector } from "app/hook";
 import { selectCurrentTeam } from "app/redux/counterSlice";
 
 const AddCard = ({ setShowModal, showInfo, refetch }) => {
+    console.log(showInfo)
     const selector = useAppSelector(selectCurrentTeam);
 
     const portalClass = classnames(
@@ -23,7 +24,6 @@ const AddCard = ({ setShowModal, showInfo, refetch }) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         
-        console.log(showInfo);
         try {
             mutateFunction({
                 variables: {
