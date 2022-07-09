@@ -17,6 +17,7 @@ export default {
     createProject: mutations.createProject,
     createTeam: mutations.createTeam,
     createTable: mutations.createTable,
+    createCard: mutations.createCard,
   },
   // Project: resolver
 }

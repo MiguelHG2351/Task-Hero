@@ -83,6 +83,9 @@ export const querys = {
         return await context.orm.table.findMany({
             where: {
                 projectId: args.id,
+            },
+            include: {
+                cards: true
             }
         });
     },
@@ -90,6 +93,9 @@ export const querys = {
         return  await context.orm.table.findUnique({
             where: {
                 id: args.id,
+            },
+            include: {
+                cards: true
             }
         });
     }

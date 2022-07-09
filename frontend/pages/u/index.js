@@ -9,8 +9,6 @@ import TeamList from 'components/pages/Home/TeamList';
 export default function U() {
     const grettings = `Hola, bienvenido`;
     const selector = useAppSelector(selectTeams)
-    console.log('selector', selector)
-
     
     return (
         <>

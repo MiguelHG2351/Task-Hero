@@ -56,3 +56,18 @@ export const CREATE_PROJECT = gql`
         }
     }
 `;
+
+export const GET_TABLES = gql`
+    query GetTables($getTablesId: String) {
+        getTables(id: $getTablesId) {
+            name
+            category
+            id
+            cards {
+                name
+                description
+                category
+            }
+        }
+    }
+`;

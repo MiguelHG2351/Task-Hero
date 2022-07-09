@@ -65,7 +65,6 @@ export default function UserLayout({ children }) {
 
     useEffect(() => {
         if (data) {
-            console.log("fetch");
             const getTeamOfLocalStorage = localStorage.getItem("currentTeam");
             setTeams(data.getTeams);
             dispatch(reduxSetTeams(data.getTeams));
@@ -78,10 +77,8 @@ export default function UserLayout({ children }) {
                     const findProject = data.getTeams.find(
                         (team) => team.id === parseLocalStorage.id
                     );
-                    console.log("find project", data.getTeams);
                     dispatch(setCurrentTeam(findProject));
                 } catch (error) {
-                    console.log(error);
                 }
             }
         }
@@ -101,7 +98,6 @@ export default function UserLayout({ children }) {
         dispatch(setCurrentTeam(team));
         setChangeTeam(false);
     }
-    console.log("currentTeam", currentTeam);
 
     return (
         <>

@@ -31,9 +31,6 @@ export default function LayoutListTeam({ name, projects = [], projectId }) {
             },
         });
     }
-
-    console.log(router.query);
-    console.log(projectId);
     return (
         <section className={projectItem} onClick={goToProject}>
             <div className="name flex gap-x-2">

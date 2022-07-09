@@ -1,6 +1,7 @@
-import { Project, Team, Role, Table } from "@prisma/client";
+import { Project, Team, Role, Table, Card } from "@prisma/client";
 import type { context } from "./types";
 
+// https://askubuntu.com/questions/180336/how-to-find-the-process-id-pid-of-a-running-terminal-program
 export const mutations = {
     async createProject(
         parent: unknown,
@@ -42,7 +43,7 @@ export const mutations = {
         { data }: { data: Team & { userId: string } },
         context: context
     ): Promise<Team> {
-        console.log(data.userId);
+        console.log(data);
         const team = await context.orm.team.create({
             data: {
                 full_name: data.full_name,
@@ -89,4 +90,20 @@ export const mutations = {
         });
         return table;
     },
+    async createCard(
+        parent: unknown,
+        { data }: { data: Card & { tableId: string } },
+        context: context
+    ): Promise<Card> {
+        console.log(data)
+        const newCard = await context.orm.card.create({
+            data: {
+                tableId: data.tableId,
+                name: data.name,
+                description: data.description,
+                category: data.category,
+            }
+        });
+        return newCard;
+    }
 };

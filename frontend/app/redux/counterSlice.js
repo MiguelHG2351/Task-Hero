@@ -42,8 +42,8 @@ export const projectSlice = createSlice({
 export const { setTeams, setProject, setUser, setCurrentTeam } = projectSlice.actions;
 
 
-export const selectProject = (state, projectName) => {
-  const findProject = state.teamList.find((project) => project.projectName === projectName)
+export const selectProject = (state, id) => {
+  const findProject = state.teamList.find((project) => project.id === id)
   if(findProject) {
     return findProject
   }

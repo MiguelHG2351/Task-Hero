@@ -59,7 +59,6 @@ type Card {
   description: String 
   category: String    
   tableId: String
-  table:   Table
 }
 
 type MessageCard {
@@ -127,13 +126,23 @@ type TeamResponse {
   updatedAt:   DateTime 
 }
 
+type TableResponse {
+  id:        String   
+  name:      String
+  projectId: String
+  category:  String
+  cards:     [Card]
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
 type Query {
     getTeams(userId: String, skip: Int, take: Int): [TeamResponse]!
     getTeam(id: String!): TeamResponse
     getProjects(id: String): [Project]
     getProject(id: String): Project
-    getTables(id: String): [Table]
-    getTable(id: String): Table
+    getTables(id: String): [TableResponse]
+    getTable(id: String): TableResponse
 }
 
 input TeamInput {
@@ -157,8 +166,16 @@ input TableInput {
   category: String
 }
 
+input CardInput {
+  tableId: String
+  name: String
+  description: String
+  category: String
+}
+
 type Mutation {
     createTeam(data: TeamInput!): Team!
     createProject(data: ProjectInput!): Project!
     createTable(data: TableInput!): Table!
+    createCard(data: CardInput!): Card!
 }
