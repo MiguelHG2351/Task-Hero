@@ -1,7 +1,42 @@
 import Image from "next/future/image";
 import { motion } from "framer-motion";
+import classNames from "classnames";
 
-export default function MenuProject({ name }) {
+export default function MenuProject({ name, setCategoryFilter, categoryFilter }) {
+  const lowClass = classNames('text-white border-none rounded px-3 py-1', {
+    'bg-dark-primary': categoryFilter.Low,
+    'bg-transparent': !categoryFilter.Low,
+  })
+
+  const mediumClass = classNames('text-white border-none rounded px-3 py-1', {
+    'bg-dark-primary': categoryFilter.Medium,
+    'bg-transparent': !categoryFilter.Medium,
+  })
+
+  const HightClass = classNames('bg-dark-primary text-white border-none rounded px-2 py-2', {
+    'bg-dark-primary': categoryFilter.High,
+    'bg-transparent': !categoryFilter.High,
+  })
+
+  function setLowHandler() {
+    setCategoryFilter({
+      ...categoryFilter,
+      Low: !categoryFilter.Low,
+    })
+  }
+  function setMediumHandler() {
+    setCategoryFilter({
+      ...categoryFilter,
+      Medium: !categoryFilter.Medium,
+    })
+  }
+  function setHighHandler() {
+    setCategoryFilter({
+      ...categoryFilter,
+      High: !categoryFilter.High,
+    })
+  }
+  
   return (
     <motion.section className="menu-project">
       <picture className="header-home">
@@ -108,13 +143,13 @@ export default function MenuProject({ name }) {
         </ul>
       </nav>
       <div className="option-filter inline-flex gap-x-1 bg-dark-secondary mb-4 ml-3 px-2 py-2 rounded-md">
-        <button className="bg-dark-primary text-white border-none rounded px-3 py-1">
+        <button className={lowClass} onClick={setLowHandler}>
           Low
         </button>
-        <button className="bg-transparent text-white border-none rounded ml-3 px-2 py-2">
+        <button className={mediumClass} onClick={setMediumHandler}>
           Medium
         </button>
-        <button className="bg-dark-primary text-white border-none rounded ml-3 px-2 py-2">
+        <button className={HightClass} onClick={setHighHandler}>
           Hight
         </button>
       </div>

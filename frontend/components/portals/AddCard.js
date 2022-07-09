@@ -2,47 +2,41 @@ import classnames from "classnames";
 import Portal from "components/containers/Portal";
 
 import { useMutation } from "@apollo/client";
-import { CREATE_PROJECT } from "app/apollo/projects";
+import { CREATE_CARD } from "app/apollo/projects";
 import { useAppSelector } from "app/hook";
 import { selectCurrentTeam } from "app/redux/counterSlice";
-import createHash from "app/utils/createHash";
 
-const AddProject = ({ setShowModal, show, refetch }) => {
+const AddCard = ({ setShowModal, showInfo, refetch }) => {
     const selector = useAppSelector(selectCurrentTeam);
 
     const portalClass = classnames(
         "modal fixed bg-black/[.7] top-[45px] left-0 w-full h-[calc(100vh_-_45px)] flex items-center justify-center",
         {
-            hidden: !show,
+            hidden: !showInfo.show,
         }
     );
 
     const [mutateFunction, { data, loading, error }] =
-        useMutation(CREATE_PROJECT);
+        useMutation(CREATE_CARD);
 
     async function formProject(e) {
         e.preventDefault();
         const formData = new FormData(e.target);
-        const image = formData.get("projectFile");
-        const hash =
-            "project/" +
-            createHash(image.name) +
-            "." +
-            image.name.split(".").pop();
-
+        
+        console.log(showInfo);
         try {
             mutateFunction({
                 variables: {
                     data: {
-                        teamId: selector.id,
-                        name: formData.get("projectName"),
-                        description: formData.get("projectDescription"),
-                        image: `${url}`,
+                        tableId: showInfo.tableId,
+                        name: formData.get("cardName"),
+                        description: formData.get("cardDescription"),
+                        category: formData.get("cardCategory"),
                     },
                 },
             });
             refetch();
-            setShowModal(false);
+            setShowModal({...showInfo, show: false});
         } catch (error) {
             console.log(error);
         }
@@ -53,27 +47,27 @@ const AddProject = ({ setShowModal, show, refetch }) => {
             <div className={portalClass}>
                 <form
                     onSubmit={formProject}
-                    className="bg-primary rounded-lg p-4"
+                    className="bg-primary rounded-lg p-5 px-8 max-w-full"
                 >
                     <h3 className="text-secondary">
-                        Ingrese Nombre del proyecto
+                        Nombre del Card
                     </h3>
                     <input
-                        name="projectName"
+                        name="cardName"
                         className="p-2 rounded-md w-full box-border"
                         type="text"
                         placeholder="Ingrese el nombre del proyecto"
                     />
-                    <h3 className="text-secondary">Agrega una imagen</h3>
-                    <input
-                        name="projectFile"
-                        className="p-2 rounded-md w-full box-border"
-                        type="file"
-                        accept="image/*"
-                    />
                     <h3 className="text-secondary">Description</h3>
                     <input
-                        name="projectDescription"
+                        name="cardDescription"
+                        className="p-2 rounded-md w-full box-border"
+                        type="text"
+                        placeholder="Ingrese la descripción del proyecto"
+                    />
+                    <h3 className="text-secondary">Categoria</h3>
+                    <input
+                        name="cardCategory"
                         className="p-2 rounded-md w-full box-border"
                         type="text"
                         placeholder="Ingrese la descripción del proyecto"
@@ -99,4 +93,4 @@ const AddProject = ({ setShowModal, show, refetch }) => {
     );
 };
 
-export default AddProject;
+export default AddCard;

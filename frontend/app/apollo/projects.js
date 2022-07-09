@@ -71,3 +71,13 @@ export const GET_TABLES = gql`
         }
     }
 `;
+
+export const CREATE_CARD = gql`
+    mutation CreateCard($data: CardInput!) {
+        createCard(data: $data) {
+            name
+            description
+            category
+        }
+    }
+`;
