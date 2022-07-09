@@ -178,10 +178,18 @@ input moveCard {
     cardId: String
 }
 
+input secretInput {
+    name: String
+    value: String
+    teamId: String
+    vaultTeamId: String
+}
+
 type Mutation {
     createTeam(data: TeamInput!): Team!
     createProject(data: ProjectInput!): Project!
     createTable(data: TableInput!): Table!
     createCard(data: CardInput!): Card!
     moveCard(data: moveCard!): Card!
+    createSecret(data: secretInput!): Secret!
 }

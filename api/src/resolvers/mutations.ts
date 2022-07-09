@@ -1,4 +1,4 @@
-import { Project, Team, Role, Table, Card } from "@prisma/client";
+import { Project, Team, Role, Table, Card, Secret } from "@prisma/client";
 import type { context } from "./types";
 
 type moveCard = {
@@ -126,5 +126,22 @@ export const mutations = {
             },
         });
         return card;
+    },
+    async createSecret(
+        parent: unknown,
+        { data }: { data: Secret & { tableId: string } },
+        context: context
+    ): Promise<Secret> {
+        console.log(data)
+        const newCard = await context.orm.secret.create({
+            data: {
+                name: data.name,
+                vaultTeamId: data.vaultTeamId,
+                value: data.value,
+                teamId: data.teamId,
+            }
+        })
+
+        return newCard;
     }
 };

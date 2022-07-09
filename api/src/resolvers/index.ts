@@ -19,6 +19,7 @@ export default {
     createTable: mutations.createTable,
     createCard: mutations.createCard,
     moveCard: mutations.moveCard,
+    createSecret: mutations.createSecret,
   },
   // Project: resolver
 }

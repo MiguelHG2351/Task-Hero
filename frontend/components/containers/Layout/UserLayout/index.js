@@ -18,8 +18,15 @@ import { useAppDispatch } from "app/hook";
 
 import Header from "../../Header";
 import LayoutListTeam from "components/pages/Home/LayoutListTeam";
-import AddTeam from "components/portals/AddTeam";
 import classNames from "classnames";
+
+const AddTeam = dynamic(() => import("components/portals/AddTeam"), {
+    suspense: true,
+});
+
+const Vault = dynamic(() => import("components/portals/Vault"), {
+    suspense: true,
+});
 
 const AddProject = dynamic(() => import("components/portals/AddProject"), {
     suspense: true,
@@ -41,6 +48,7 @@ export default function UserLayout({ children }) {
     const [showTeamModal, setShowTeamModal] = useState(false);
     const [showProjectModal, setShowProjectModal] = useState(false);
     const [changeTeam, setChangeTeam] = useState(false);
+    const [showVaultInfo, setShowVaultInfo] = useState(false);
     const changeTeamClass = classNames(
         "teamSidenavList absolute left-0 top-full right-0 bg-secondary",
         {
@@ -78,8 +86,7 @@ export default function UserLayout({ children }) {
                         (team) => team.id === parseLocalStorage.id
                     );
                     dispatch(setCurrentTeam(findProject));
-                } catch (error) {
-                }
+                } catch (error) {}
             }
         }
     }, [data]);
@@ -105,7 +112,7 @@ export default function UserLayout({ children }) {
             <main className="relative min-h-[calc(100vh_-_45px)] md:h-[calc(100%_-45px)] overflow-hidden md:grid md:grid-cols-[min-content_minmax(0,_1fr)] md:grid-rows-1">
                 <section
                     ref={sidenavRef}
-                    className="sidenav-project box-border border-dark-primary border-0 border-t-primary border-t-0.5 border-solid absolute bg-black/[.6] h-[calc(100vh_-_45px)] left-0 top-0 w-screen md:flex md:static md:w-auto transition-transform -translate-x-[100vw] md:translate-x-0"
+                    className="sidenav-project z-10 box-border border-dark-primary border-0 border-t-primary border-t-0.5 border-solid absolute bg-black/[.6] h-[calc(100vh_-_45px)] left-0 top-0 w-screen md:flex md:static md:w-auto transition-transform -translate-x-[100vw] md:translate-x-0"
                 >
                     <section
                         ref={mainSideRef}
@@ -285,6 +292,24 @@ export default function UserLayout({ children }) {
                                         {team.length}
                                     </span>
                                 </li>
+                                <li onClick={() => setShowVaultInfo(true)} className="list-none cursor-pointer bg-accent p-4 rounded-md flex items-center justify-between mt-2">
+                                    <span className="text-dark-primary">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="20"
+                                            height="20"
+                                            viewBox="0 0 20 20"
+                                            fill="none"
+                                            className="align-middle mr-1"
+                                        >
+                                            <path
+                                                d="M0 7.48214C0 6.55862 0.366868 5.67292 1.0199 5.0199C1.67292 4.36687 2.55862 4 3.48214 4H16.0179C16.9414 4 17.8271 4.36687 18.4801 5.0199C19.1331 5.67292 19.5 6.55862 19.5 7.48214V13.0536C19.5 13.5109 19.4099 13.9637 19.2349 14.3861C19.0599 14.8086 18.8035 15.1925 18.4801 15.5158C18.1568 15.8392 17.7729 16.0957 17.3504 16.2707C16.9279 16.4456 16.4751 16.5357 16.0179 16.5357H3.48214C2.55862 16.5357 1.67292 16.1688 1.0199 15.5158C0.366868 14.8628 0 13.9771 0 13.0536V7.48214ZM5.77479 8.38193L4.875 9.28311L3.97521 8.38193C3.91046 8.31718 3.83359 8.26581 3.74899 8.23077C3.66439 8.19573 3.57371 8.17769 3.48214 8.17769C3.39057 8.17769 3.2999 8.19573 3.21529 8.23077C3.13069 8.26581 3.05382 8.31718 2.98907 8.38193C2.92432 8.44668 2.87296 8.52355 2.83791 8.60815C2.80287 8.69275 2.78483 8.78343 2.78483 8.875C2.78483 8.96657 2.80287 9.05725 2.83791 9.14185C2.87296 9.22645 2.92432 9.30332 2.98907 9.36807L3.89025 10.2679L2.98907 11.1676C2.92432 11.2324 2.87296 11.3093 2.83791 11.3939C2.80287 11.4785 2.78483 11.5691 2.78483 11.6607C2.78483 11.7523 2.80287 11.843 2.83791 11.9276C2.87296 12.0122 2.92432 12.089 2.98907 12.1538C3.11984 12.2846 3.29721 12.358 3.48214 12.358C3.57371 12.358 3.66439 12.34 3.74899 12.3049C3.83359 12.2699 3.91046 12.2185 3.97521 12.1538L4.875 11.2526L5.77479 12.1538C5.83954 12.2185 5.91641 12.2699 6.00101 12.3049C6.08561 12.34 6.17629 12.358 6.26786 12.358C6.35943 12.358 6.4501 12.34 6.53471 12.3049C6.61931 12.2699 6.69618 12.2185 6.76093 12.1538C6.82568 12.089 6.87704 12.0122 6.91209 11.9276C6.94713 11.843 6.96517 11.7523 6.96517 11.6607C6.96517 11.5691 6.94713 11.4785 6.91209 11.3939C6.87704 11.3093 6.82568 11.2324 6.76093 11.1676L5.85975 10.2679L6.76093 9.36807C6.82568 9.30332 6.87704 9.22645 6.91209 9.14185C6.94713 9.05725 6.96517 8.96657 6.96517 8.875C6.96517 8.78343 6.94713 8.69275 6.91209 8.60815C6.87704 8.52355 6.82568 8.44668 6.76093 8.38193C6.69618 8.31718 6.61931 8.26581 6.53471 8.23077C6.4501 8.19573 6.35943 8.17769 6.26786 8.17769C6.17629 8.17769 6.08561 8.19573 6.00101 8.23077C5.91641 8.26581 5.83954 8.31718 5.77479 8.38193ZM11.3462 8.38193L10.4464 9.28311L9.54664 8.38193C9.48189 8.31718 9.40502 8.26581 9.32042 8.23077C9.23582 8.19573 9.14514 8.17769 9.05357 8.17769C8.962 8.17769 8.87132 8.19573 8.78672 8.23077C8.70212 8.26581 8.62525 8.31718 8.5605 8.38193C8.49575 8.44668 8.44439 8.52355 8.40934 8.60815C8.3743 8.69275 8.35626 8.78343 8.35626 8.875C8.35626 8.96657 8.3743 9.05725 8.40934 9.14185C8.44439 9.22645 8.49575 9.30332 8.5605 9.36807L9.46168 10.2679L8.5605 11.1676C8.49575 11.2324 8.44439 11.3093 8.40934 11.3939C8.3743 11.4785 8.35626 11.5691 8.35626 11.6607C8.35626 11.7523 8.3743 11.843 8.40934 11.9276C8.44439 12.0122 8.49575 12.089 8.5605 12.1538C8.69127 12.2846 8.86863 12.358 9.05357 12.358C9.14514 12.358 9.23582 12.34 9.32042 12.3049C9.40502 12.2699 9.48189 12.2185 9.54664 12.1538L10.4464 11.2526L11.3462 12.1538C11.477 12.2846 11.6543 12.358 11.8393 12.358C12.0242 12.358 12.2016 12.2846 12.3324 12.1538C12.4631 12.023 12.5366 11.8457 12.5366 11.6607C12.5366 11.4758 12.4631 11.2984 12.3324 11.1676L11.4312 10.2679L12.3324 9.36807C12.4631 9.2373 12.5366 9.05994 12.5366 8.875C12.5366 8.69006 12.4631 8.5127 12.3324 8.38193C12.2016 8.25116 12.0242 8.17769 11.8393 8.17769C11.6543 8.17769 11.477 8.25116 11.3462 8.38193ZM13.9286 11.6607C13.9286 11.8454 14.0019 12.0226 14.1326 12.1532C14.2632 12.2838 14.4403 12.3571 14.625 12.3571H16.0179C16.2026 12.3571 16.3797 12.2838 16.5103 12.1532C16.6409 12.0226 16.7143 11.8454 16.7143 11.6607C16.7143 11.476 16.6409 11.2989 16.5103 11.1683C16.3797 11.0377 16.2026 10.9643 16.0179 10.9643H14.625C14.4403 10.9643 14.2632 11.0377 14.1326 11.1683C14.0019 11.2989 13.9286 11.476 13.9286 11.6607Z"
+                                                className="fill-dark-primary"
+                                            />
+                                        </svg>
+                                        <span>Vault</span>
+                                    </span>
+                                </li>
                             </ul>
                         </div>
                         <div className="user-option w-5/6 text-left">
@@ -400,6 +425,7 @@ export default function UserLayout({ children }) {
                         setShowModal={setShowTeamModal}
                         show={showTeamModal}
                     />
+                    <Vault show={showVaultInfo} setShowModal={setShowVaultInfo} refetch={refetch} />
                 </Suspense>
                 {children}
             </main>

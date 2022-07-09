@@ -7,7 +7,9 @@ export const GET_PROJECTS = gql`
             image
             id
             vaulTeam {
+                id
                 secrets {
+                    id
                     name
                     value
                 }
@@ -79,6 +81,15 @@ export const CREATE_CARD = gql`
             name
             description
             category
+        }
+    }
+`;
+
+export const CREATE_SECRET = gql`
+    mutation CreateSecret($data: secretInput!) {
+        createSecret(data: $data) {
+            name
+            value
         }
     }
 `;
