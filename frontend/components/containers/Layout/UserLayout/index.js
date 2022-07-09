@@ -8,6 +8,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import {
     setTeams as reduxSetTeams,
     setCurrentTeam,
+	setUser,
 } from "app/redux/counterSlice";
 import { useAppDispatch } from "app/hook";
 
@@ -29,11 +30,9 @@ export default function UserLayout({ children }) {
     const [showProjectModal, setShowProjectModal] = useState(false);
     const [showTeamModal, setShowTeamModal] = useState(false);
 
-    const [getTeams, { loading, error, data }] = useLazyQuery(GET_PROJECTS, {
+    const [getTeams, { loading, error, data, refetch }] = useLazyQuery(GET_PROJECTS, {
 		onCompleted: (data) => {
 			const getTeamOfLocalStorage = localStorage.getItem("currentTeam");
-			console.log(';Dd')
-			console.log(data)
 			setTeams(data.getTeams);
             dispatch(reduxSetTeams(data.getTeams));
             if (data.getTeams.length > 0 && !getTeamOfLocalStorage ) {
@@ -53,9 +52,9 @@ export default function UserLayout({ children }) {
                     take: 2,
                 },
             });
+			dispatch(setUser(session.data.user));
         }
     }, [session]);
-	console.log(loading, data)
 
     function viewProject() {
         mainSideRef.current.classList.add("translate-x-[-100vw]");
@@ -240,8 +239,8 @@ export default function UserLayout({ children }) {
                     </section>
                 </section>
                 <Suspense>
-                    <AddProject setShowModal={setShowProjectModal} show={showProjectModal} />
-					<AddTeam setShowModal={setShowTeamModal} show={showTeamModal} />
+                    <AddProject refetch={refetch} setShowModal={setShowProjectModal} show={showProjectModal} />
+					<AddTeam refetch={refetch} setShowModal={setShowTeamModal} show={showTeamModal} />
                 </Suspense>
                 {children}
             </main>

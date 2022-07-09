@@ -7,8 +7,6 @@ export async function middleware(request) {
     if(!session) {
         return NextResponse.redirect(new URL('/auth/signin', request.url))
     }
-    console.log('middlware sub', session?.sub)
-    console.log('middlware data', session)
   return NextResponse.next()
 }
 

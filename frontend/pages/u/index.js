@@ -11,8 +11,6 @@ export default function U() {
     const selector = useAppSelector(selectCurrentTeam)
     console.log('selector', selector)
 
-    // console.log('loading?', loading);
-    // console.log('session, data', session, data);
     
     return (
         <>

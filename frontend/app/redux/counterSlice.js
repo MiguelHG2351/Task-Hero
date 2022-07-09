@@ -22,7 +22,6 @@ export const projectSlice = createSlice({
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
     setTeams: (state, action) => {
-      console.log(action)
       state.teamList = action.payload;
     },
     setProject: (state, action) => {
