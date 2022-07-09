@@ -7,7 +7,6 @@ import { useAppSelector } from "app/hook";
 import { selectCurrentTeam } from "app/redux/counterSlice";
 
 const AddCard = ({ setShowModal, showInfo, refetch }) => {
-    console.log(showInfo)
     const selector = useAppSelector(selectCurrentTeam);
 
     const portalClass = classnames(
@@ -18,7 +17,14 @@ const AddCard = ({ setShowModal, showInfo, refetch }) => {
     );
 
     const [mutateFunction, { data, loading, error }] =
-        useMutation(CREATE_CARD);
+        useMutation(CREATE_CARD, {
+            updateQueries: (observableQuery) => {
+                return observableQuery.refetch()
+            },
+            onCompleted() {
+                refetch()
+            }
+        });
 
     async function formProject(e) {
         e.preventDefault();
@@ -38,8 +44,9 @@ const AddCard = ({ setShowModal, showInfo, refetch }) => {
             refetch();
             setShowModal({...showInfo, show: false});
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
+        e.target.reset();
     }
 
     return (

@@ -8,7 +8,6 @@ import { selectCurrentTeam } from "app/redux/counterSlice";
 
 const Vault = ({ setShowModal, show, refetch }) => {
     const selector = useAppSelector(selectCurrentTeam);
-    console.log("selector is: ", selector);
 
     const portalClass = classnames(
         "modal bg-primary z-20 fixed bg-black/[.7] top-[45px] left-0 w-full h-[calc(100vh_-_45px)] flex flex-col items-center justify-start overflow-y-auto",
@@ -38,14 +37,15 @@ const Vault = ({ setShowModal, show, refetch }) => {
             });
             refetch();
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
+        e.target.reset();
     }
 
     return (
         <Portal>
             <div className={portalClass}>
-                <div className="keys w-11/12 grid grid-cols-2 gap-x-2 gap-y-2">
+                <div className="keys w-11/12 grid grid-cols-2 md:grid-cols-3 gap-x-2 gap-y-2">
                     {selector?.vaulTeam &&
                         selector.vaulTeam[0].secrets.map((key) => {
                             return (

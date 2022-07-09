@@ -86,7 +86,9 @@ export default function UserLayout({ children }) {
                         (team) => team.id === parseLocalStorage.id
                     );
                     dispatch(setCurrentTeam(findProject));
-                } catch (error) {}
+                } catch (error) {
+                    console.error(error);
+                }
             }
         }
     }, [data]);

@@ -88,9 +88,9 @@ export default function Card({ optionMove, card, tableOrigin, refetch }) {
 }
 
 function OptionCard({ tableOrigin, option, card, refetch }) {
-    console.log(option, card, tableOrigin);
     const [mutateFunction, { data, loading, error }] = useMutation(MOVE_CARD, {
         onCompleted: () => {
+            console.log('enviandoooooo')
             refetch();
         }
     });

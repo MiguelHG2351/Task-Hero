@@ -1,7 +1,6 @@
 import Card from "./Card";
 
 export default function CardList({ refetch, table, tables, openModal, filters }) {
-    console.log('reload')
     function openModalHandler() {
         openModal({
             show: true,

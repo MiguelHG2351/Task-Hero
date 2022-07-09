@@ -42,8 +42,9 @@ const AddTeam = ({ setShowModal, show, refetch }) => {
             refetch();
             setShowModal(false);
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
+        e.target.reset();
     }
 
     return (

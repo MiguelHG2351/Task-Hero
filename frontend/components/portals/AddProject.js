@@ -20,7 +20,11 @@ const AddProject = ({ setShowModal, show, refetch }) => {
     );
 
     const [mutateFunction, { data, loading, error }] =
-        useMutation(CREATE_PROJECT);
+        useMutation(CREATE_PROJECT, {
+            onQueryUpdated(observableQuery) {
+                return observableQuery.refetch();
+            }
+        });
 
     async function formProject(e) {
         e.preventDefault();
@@ -44,11 +48,13 @@ const AddProject = ({ setShowModal, show, refetch }) => {
                     },
                 },
             });
+            console.log('paso 1');
             refetch();
             setShowModal(false);
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
+        e.target.reset();
     }
 
     return (
