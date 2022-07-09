@@ -47,7 +47,7 @@ class Firebase {
             const storageRef = ref(this.storage, path);
             uploadBytes(storageRef, file)
                 .then(() => {
-                    resolve(path);
+                    resolve(this.getFile(path));
                 })
                 .catch((error) => {
                     reject(error);

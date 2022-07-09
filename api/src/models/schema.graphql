@@ -117,6 +117,7 @@ type vaulTeam {
 type TeamResponse {
   id:          String       
   full_name:   String        
+  image:       String!
   TeamAndUser: [TeamAndUser]
   vaulTeam:    [vaulTeam]
   projects:    [Project]

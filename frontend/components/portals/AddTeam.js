@@ -29,16 +29,16 @@ const AddTeam = ({ setShowModal, show, refetch }) => {
         const hash = 'team/' + createHash(image.name) + "." + image.name.split(".").pop();
 
         try {
+            const url = await firebase.uploadFile(hash, image);
             mutateFunction({
                 variables: {
                     data: {
                         userId: selector.id,
                         full_name: formData.get("teamName"),
-                        image: `${hash}`,
+                        image: `${url}`,
                     },
                 },
             });
-            firebase.uploadFile(hash, image);
             refetch();
             setShowModal(false);
         } catch (error) {

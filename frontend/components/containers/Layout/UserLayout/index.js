@@ -5,10 +5,12 @@ import { useSession } from "next-auth/react";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { GET_PROJECTS } from "app/apollo/projects";
 import { Suspense, useEffect, useRef, useState } from "react";
+import { useAppSelector } from "app/hook";
 import {
     setTeams as reduxSetTeams,
     setCurrentTeam,
 	setUser,
+    selectCurrentTeam
 } from "app/redux/counterSlice";
 import { useAppDispatch } from "app/hook";
 
@@ -27,8 +29,10 @@ export default function UserLayout({ children }) {
     const dispatch = useAppDispatch();
     const projectSideRef = useRef(null);
     const [team, setTeams] = useState([]);
-    const [showProjectModal, setShowProjectModal] = useState(false);
+    const selector = useAppSelector(selectCurrentTeam);
+
     const [showTeamModal, setShowTeamModal] = useState(false);
+    const [showProjectModal, setShowProjectModal] = useState(false);
 
     const [getTeams, { loading, error, data, refetch }] = useLazyQuery(GET_PROJECTS, {
 		onCompleted: (data) => {
@@ -36,7 +40,7 @@ export default function UserLayout({ children }) {
 			setTeams(data.getTeams);
             dispatch(reduxSetTeams(data.getTeams));
             if (data.getTeams.length > 0 && !getTeamOfLocalStorage ) {
-                dispatch(setCurrentTeam(data.getTeams));
+                dispatch(setCurrentTeam(data.getTeams[0]));
             }
             if (typeof getTeamOfLocalStorage === 'string') {
                 dispatch(setCurrentTeam(JSON.parse(getTeamOfLocalStorage)));
@@ -83,13 +87,13 @@ export default function UserLayout({ children }) {
                             <img
                                 width={44}
                                 height={44}
-                                src="/images/examples/kotlin.png"
+                                src={selector.image}
                                 className="flex-shrink-0"
                                 alt=""
                             />
                             <div className="team-info">
                                 <h3 title="Kotlin Workspace" className="m-0 text-primary whitespace-nowrap w-[14ch] overflow-hidden text-ellipsis">
-                                    Kotlin Workspace
+                                    {selector.full_name}
                                 </h3>
                                 <span className="text-secondary">Team</span>
                             </div>

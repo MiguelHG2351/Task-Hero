@@ -4,6 +4,7 @@ export const GET_PROJECTS = gql`
   query GetTeams($userId: String, $skip: Int, $take: Int) {
     getTeams(userId: $userId, skip: $skip, take: $take) {
       full_name
+      image
       id
       vaulTeam {
         secrets {
