@@ -242,7 +242,7 @@ export default function UserLayout({ children }) {
                             <ul className="pl-0">
                                 <li className="list-none">
                                     <Link href="/u">
-                                        <a className="text-dark-secondary bg-accent p-4 rounded-md flex items-center justify-start gap-x-1 no-underline">
+                                        <a className="text-dark-secondary bg-accent p-3 rounded-md flex items-center justify-start gap-x-1 no-underline">
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="20"
@@ -266,7 +266,7 @@ export default function UserLayout({ children }) {
                             <ul className="pl-0">
                                 <li
                                     onClick={viewProject}
-                                    className="list-none cursor-pointer bg-accent p-4 rounded-md flex items-center justify-between"
+                                    className="list-none box-border cursor-pointer bg-accent p-2 rounded-md flex items-center justify-between"
                                 >
                                     <span className="text-dark-primary">
                                         <svg
@@ -290,11 +290,11 @@ export default function UserLayout({ children }) {
                                         </svg>
                                         <span>Projects</span>
                                     </span>
-                                    <span className="text-dark-primary">
+                                    <span className="text-primary text-sm box-border bg-secondary p-1 px-2 rounded-md bg-blend-multiply">
                                         {team.length}
                                     </span>
                                 </li>
-                                <li onClick={() => setShowVaultInfo(true)} className="list-none cursor-pointer bg-accent p-4 rounded-md flex items-center justify-between mt-2">
+                                <li onClick={() => setShowVaultInfo(true)} className="list-none cursor-pointer bg-accent p-3 rounded-md flex items-center justify-between mt-2">
                                     <span className="text-dark-primary">
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
