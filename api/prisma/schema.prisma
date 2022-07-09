@@ -13,7 +13,7 @@ generator client {
 model Team {
   id          String        @id @default(cuid())
   full_name   String        @db.VarChar(100)
-  vaultId     Int
+  image       String        @default("https://taskhero.miguel2351.me/images/examples/kotlin.png")
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @default(now())
   projects    Project[]
@@ -57,6 +57,7 @@ model Project {
   description String
   name        String
   teamId      String
+  image       String @default("https://taskhero.miguel2351.me/images/examples/background-project.png")
   team        Team     @relation(fields: [teamId], references: [id],  onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())

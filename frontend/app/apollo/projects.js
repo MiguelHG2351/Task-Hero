@@ -39,7 +39,8 @@ export const GET_TEAM = gql`
 export const CREATE_TEAM = gql`
   mutation Mutation($data: TeamInput!) {
     createTeam(data: $data) {
-      full_name
+      full_name,
+      image
     }
   }
 `;

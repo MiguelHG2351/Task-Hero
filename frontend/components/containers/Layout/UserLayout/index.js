@@ -1,10 +1,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
-// import { useAppSelector } from "app/hook";
-// import {
-//   selectUser
-// } from "app/redux/counterSlice";
 
+import { useSession } from "next-auth/react";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { GET_PROJECTS } from "app/apollo/projects";
 import { Suspense, useEffect, useRef, useState } from "react";
@@ -16,7 +13,7 @@ import { useAppDispatch } from "app/hook";
 
 import Header from "../../Header";
 import LayoutListTeam from "components/pages/Home/LayoutListTeam";
-import { useSession } from "next-auth/react";
+import AddTeam from "components/portals/AddTeam";
 
 const AddProject = dynamic(() => import("components/portals/AddProject"), {
     suspense: true,
@@ -29,11 +26,14 @@ export default function UserLayout({ children }) {
     const dispatch = useAppDispatch();
     const projectSideRef = useRef(null);
     const [team, setTeams] = useState([]);
-    const [showModal, setShowModal] = useState(false);
+    const [showProjectModal, setShowProjectModal] = useState(false);
+    const [showTeamModal, setShowTeamModal] = useState(false);
 
     const [getTeams, { loading, error, data }] = useLazyQuery(GET_PROJECTS, {
 		onCompleted: (data) => {
 			const getTeamOfLocalStorage = localStorage.getItem("currentTeam");
+			console.log(';Dd')
+			console.log(data)
 			setTeams(data.getTeams);
             dispatch(reduxSetTeams(data.getTeams));
             if (data.getTeams.length > 0 && !getTeamOfLocalStorage ) {
@@ -46,7 +46,6 @@ export default function UserLayout({ children }) {
     });
     useEffect(() => {
         if (session.status === "authenticated") {
-			console.log(session.data.user.id)
             getTeams({
                 variables: {
                     userId: session.data.user.id,
@@ -56,6 +55,7 @@ export default function UserLayout({ children }) {
             });
         }
     }, [session]);
+	console.log(loading, data)
 
     function viewProject() {
         mainSideRef.current.classList.add("translate-x-[-100vw]");
@@ -79,7 +79,8 @@ export default function UserLayout({ children }) {
                         ref={mainSideRef}
                         className="containera bg-primary py-4 w-5/6 absolute md:static top-0 bottom-0 md:px-2 md:w-auto flex flex-col items-center md:translate-x-0"
                     >
-                        <div className="team flex items-center gap-x-2 bg-gray-600 p-4 w-5/6 md:w-auto rounded-sm box-border select-none">
+						{(!loading &&  data?.getTeams.length > 0) && 
+                        <div className="team flex items-center gap-x-2 bg-gray-600 py-4 px-5 w-5/6 md:w-auto rounded-sm box-border select-none">
                             <img
                                 width={44}
                                 height={44}
@@ -88,7 +89,7 @@ export default function UserLayout({ children }) {
                                 alt=""
                             />
                             <div className="team-info">
-                                <h3 className="m-0 text-primary">
+                                <h3 title="Kotlin Workspace" className="m-0 text-primary whitespace-nowrap w-[14ch] overflow-hidden text-ellipsis">
                                     Kotlin Workspace
                                 </h3>
                                 <span className="text-secondary">Team</span>
@@ -111,7 +112,16 @@ export default function UserLayout({ children }) {
                                     />
                                 </svg>
                             </div>
-                        </div>
+                        </div>}
+						{
+							(!loading && data?.getTeams.length === 0) &&
+							<div className="addTeam py-4 px-5 bg-gray-600 flex flex-col items-center gap-y-4">
+								<button onClick={() => setShowTeamModal(true)} className="whitespace-nowrap w-full p-2 bg-transparent text-secondary border-dashed border-secondary">
+									Agregar un team
+								</button>
+								<span className="whitespace-nowrap text-sm text-secondary">Aún no formas parte de un team</span>
+							</div>
+						}
                         <div className="project w-5/6 text-left">
                             <h4 className="text-secondary">Home</h4>
                             <ul className="pl-0">
@@ -209,7 +219,7 @@ export default function UserLayout({ children }) {
                                     );
                                 })}
                             <button
-                                onClick={() => setShowModal(true)}
+                                onClick={() => setShowProjectModal(true)}
                                 className="p-2 bg-transparent border-none hover:bg-green-500/[.5] text-[0px] rounded"
                             >
                                 <svg
@@ -230,7 +240,8 @@ export default function UserLayout({ children }) {
                     </section>
                 </section>
                 <Suspense>
-                    <AddProject setShowModal={setShowModal} show={showModal} />
+                    <AddProject setShowModal={setShowProjectModal} show={showProjectModal} />
+					<AddTeam setShowModal={setShowTeamModal} show={showTeamModal} />
                 </Suspense>
                 {children}
             </main>

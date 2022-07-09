@@ -2,8 +2,8 @@ scalar DateTime
 
 type Team {
   id:          String       
-  full_name:   String        
-  vaultId:     Int
+  full_name:   String       
+  image:       String! 
   createdAt:   DateTime
   updatedAt:   DateTime
 }
@@ -136,6 +136,7 @@ type Query {
 
 input TeamInput {
   id: String
+  image: String!
   full_name: String
   userId : String
 } 

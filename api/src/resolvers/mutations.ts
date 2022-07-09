@@ -21,7 +21,7 @@ export const mutations = {
     const team = await context.orm.team.create({
         data: {
           full_name: data.full_name,
-          vaultId: 5,
+          image: data.image,
         },
       })
 
