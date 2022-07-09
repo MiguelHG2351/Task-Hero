@@ -1,8 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// const currentTeam = JSON.parse(localStorage.getItem("currentTeam"))
 const initialState = {
   teamList: [],
   currentUser: {},
+  // currentTeam: currentTeam ??  {},
   currentTeam: {},
   users: [
     {
@@ -20,6 +22,7 @@ export const projectSlice = createSlice({
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
     setTeams: (state, action) => {
+      console.log(action)
       state.teamList = action.payload;
     },
     setProject: (state, action) => {
@@ -46,7 +49,7 @@ export const selectProject = (state, projectName) => {
 
 export const selectProjects = (state) => state.projects;
 
-export const selectCurrentTeam = (state) => state.currentTeam;
+export const selectCurrentTeam = (state) => state.team.currentTeam
 
 export const selectUser = (state) => state.team.currentUser;
 

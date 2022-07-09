@@ -37,10 +37,9 @@ export const GET_TEAM = gql`
 `;
 
 export const CREATE_TEAM = gql`
-  mutation CreateTeam($data: TeamInput!) {
+  mutation Mutation($data: TeamInput!) {
     createTeam(data: $data) {
       full_name
-      vaultId
     }
   }
 `;

@@ -137,7 +137,6 @@ type Query {
 input TeamInput {
   id: String
   full_name: String
-  vaultId: Int
   userId : String
 } 
 
