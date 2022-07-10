@@ -17,7 +17,11 @@ const Vault = ({ setShowModal, show, refetch }) => {
     );
 
     const [mutateFunction, { data, loading, error }] =
-        useMutation(CREATE_SECRET);
+        useMutation(CREATE_SECRET, {
+            onCompleted() {
+                refetch();
+            }
+        });
 
     async function formProject(e) {
         e.preventDefault();
