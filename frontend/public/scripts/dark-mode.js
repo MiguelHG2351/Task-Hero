@@ -11,9 +11,7 @@
         schema.addEventListener('change', e => {
             let newClass = !e.matches ? 'light' : 'dark';
             replaceClass(body, newClass, body.classList[0]);
-            console.log(newClass)
             
-            console.log('cambiaaaaaa')
         })
     }
   })()

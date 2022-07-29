@@ -29,7 +29,7 @@ module.exports = {
                 sans: ['Inter', ...defaultTheme.fontFamily.sans],
             },
             backgroundColor: customColorsList.bg,
-            borderColor: customColorsList.textAndOther,
+            borderColor: {...customColorsList.textAndOther},
             textColor: customColorsList.textAndOther,
             fill: customColorsList.textAndOther,
             borderWidth: {
@@ -52,6 +52,7 @@ module.exports = {
             indigo: colors.indigo,
             cyan: colors.cyan,
             'dark-primary': '#3D3C3F',
+            'dark-gray': '#aaa',
             'gray-text': '#ACACAC',
             'dark-secondary': '#242426',
         },

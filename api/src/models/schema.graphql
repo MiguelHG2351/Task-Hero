@@ -1,128 +1,138 @@
 scalar DateTime
 
 type Team {
-  id:          String       
-  full_name:   String        
-  vaultId:     Int
-  createdAt:   DateTime
-  updatedAt:   DateTime
+    id: String
+    full_name: String
+    image: String!
+    createdAt: DateTime
+    updatedAt: DateTime
 }
 
 type VaultTeam {
-  id:      String  
-  teamId:  String
-  team:    Team
+    id: String
+    teamId: String
+    team: Team
 }
 
 type Secret {
-  id:          String    
-  name:        String     
-  value:       String     
-  createdAt:   DateTime
-  updatedAt:   DateTime
-  teamId:      String
-  VaultTeam:   VaultTeam
-  vaultTeamId: String
+    id: String
+    name: String
+    value: String
+    createdAt: DateTime
+    updatedAt: DateTime
+    teamId: String
+    VaultTeam: VaultTeam
+    vaultTeamId: String
 }
 
 type TeamAndUser {
-  id:     String
-  userId: String
-  teamId: String
-  role:   Role
-  user:   User
-  team:   Team
+    id: String
+    userId: String
+    teamId: String
+    role: Role
+    user: User
+    team: Team
 }
 
 type Project {
-  id:          String  
-  description: String
-  name:        String
-  teamId:      String
-  team:        Team
-  createdAt:   DateTime
-  updatedAt:   DateTime
-  tables:     [Table]
+    id: String
+    description: String
+    image: String
+    name: String
+    teamId: String
+    team: Team
+    createdAt: DateTime
+    updatedAt: DateTime
+    tables: [Table]
 }
 
 type Table {
-  id:        String   
-  name:      String
-  projectId: String
-  category:  String
+    id: String
+    name: String
+    projectId: String
+    category: String
 }
 
 type Card {
-  id:       String   
-  name:    String
-  description: String 
-  category: String    
-  tableId: String
-  table:   Table
+    id: String
+    name: String
+    description: String
+    category: String
+    tableId: String
 }
 
 type MessageCard {
-  id:       String   
-  text:    String    
-  img:    String    
-  authorId: String
-  cardId:  String
+    id: String
+    text: String
+    img: String
+    authorId: String
+    cardId: String
 }
 
 type File {
-  id:       String   
-  path:    String    
-  authorId: String
-  author:   User
-  cardId:  String
-  card:     Card
+    id: String
+    path: String
+    authorId: String
+    author: User
+    cardId: String
+    card: Card
 }
 
-
 type Link {
-  id:       String   
-  url:    String    
-  authorId: String
-  author:   User
-  cardId:  String
-  card:     Card
+    id: String
+    url: String
+    authorId: String
+    author: User
+    cardId: String
+    card: Card
 }
 
 type User {
-  id:            String       
-  name:          String
-  email:         String       
-  emailVerified: DateTime
-  image:         String
+    id: String
+    name: String
+    email: String
+    emailVerified: DateTime
+    image: String
 }
 
 type AdminAPI {
-  id:         String
-  name:       String
-  password:    String
+    id: String
+    name: String
+    password: String
 }
 
 enum Role {
-  ADMIN
-  MEMBER
-  GUEST
+    ADMIN
+    MEMBER
+    GUEST
 }
 
 type vaulTeam {
-  id: String
-  teamId: String
-  secrets: [Secret]
+    id: String
+    teamId: String
+    secrets: [Secret]
 }
 
 type TeamResponse {
-  id:          String       
-  full_name:   String        
-  TeamAndUser: [TeamAndUser]
-  vaulTeam:    [vaulTeam]
-  projects:    [Project]
-  vaultId:     Int
-  createdAt:   DateTime
-  updatedAt:   DateTime 
+    id: String
+    full_name: String
+    image: String!
+    TeamAndUser: [TeamAndUser]
+    vaulTeam: [vaulTeam]
+    projects: [Project]
+    vaultId: Int
+    createdAt: DateTime
+    updatedAt: DateTime
+}
+
+type TableResponse {
+    id: String
+    name: String
+    projectId: String
+    category: String
+    cards: [Card]
+    createdAt: DateTime
+    updatedAt: DateTime
 }
 
 type Query {
@@ -130,32 +140,56 @@ type Query {
     getTeam(id: String!): TeamResponse
     getProjects(id: String): [Project]
     getProject(id: String): Project
-    getTables(id: String): [Table]
-    getTable(id: String): Table
+    getTables(id: String): [TableResponse]
+    getTable(id: String): TableResponse
 }
 
 input TeamInput {
-  id: String
-  full_name: String
-  vaultId: Int
-  userId : String
-} 
+    id: String
+    image: String!
+    full_name: String
+    userId: String
+}
 
 input ProjectInput {
-  id: String
-  description: String
-  name: String
-  teamId: String
+    id: String
+    description: String
+    image: String
+    name: String
+    teamId: String
 }
 
 input TableInput {
-  name: String
-  projectId: String
-  category: String
+    name: String
+    projectId: String
+    category: String
+}
+
+input CardInput {
+    tableId: String
+    name: String
+    description: String
+    category: String
+}
+
+input moveCard {
+    tableIdOrigin: String
+    tableIdDestination: String
+    cardId: String
+}
+
+input secretInput {
+    name: String
+    value: String
+    teamId: String
+    vaultTeamId: String
 }
 
 type Mutation {
     createTeam(data: TeamInput!): Team!
     createProject(data: ProjectInput!): Project!
     createTable(data: TableInput!): Table!
+    createCard(data: CardInput!): Card!
+    moveCard(data: moveCard!): Card!
+    createSecret(data: secretInput!): Secret!
 }

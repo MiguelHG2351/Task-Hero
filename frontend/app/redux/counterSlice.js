@@ -1,8 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// const currentTeam = JSON.parse(localStorage.getItem("currentTeam"))
 const initialState = {
   teamList: [],
   currentUser: {},
+  // currentTeam: currentTeam ??  {},
   currentTeam: {},
   users: [
     {
@@ -26,10 +28,12 @@ export const projectSlice = createSlice({
       state.currentProject = action.payload;
     },
     setUser: (state,action) => {
-      console.log('cambiando el estado')
       state.currentUser = action.payload;
     },
     setCurrentTeam: (state,action) => {
+      if(action.payload) {
+        window.localStorage.setItem("currentTeam", JSON.stringify(action.payload));
+      }
       state.currentTeam = action.payload;
     }
   },
@@ -38,8 +42,8 @@ export const projectSlice = createSlice({
 export const { setTeams, setProject, setUser, setCurrentTeam } = projectSlice.actions;
 
 
-export const selectProject = (state, projectName) => {
-  const findProject = state.teamList.find((project) => project.projectName === projectName)
+export const selectProject = (state, id) => {
+  const findProject = state.teamList.find((project) => project.id === id)
   if(findProject) {
     return findProject
   }
@@ -47,7 +51,9 @@ export const selectProject = (state, projectName) => {
 
 export const selectProjects = (state) => state.projects;
 
-export const selectCurrentTeam = (state) => state.currentTeam;
+export const selectTeams = (state) => state.team.teamList;
+
+export const selectCurrentTeam = (state) => state.team.currentTeam
 
 export const selectUser = (state) => state.team.currentUser;
 

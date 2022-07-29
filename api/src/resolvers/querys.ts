@@ -67,7 +67,11 @@ export const querys = {
     async getProject(root: unknown, args: { id: string }, context: context): Promise<Project | null> {
         const project= await context.orm.project.findFirst({
             where: {
-                teamId: args.id,
+                id: args.id,
+            },
+            include: {
+                tables: true,
+                team: true
             }
         });
         
@@ -79,6 +83,9 @@ export const querys = {
         return await context.orm.table.findMany({
             where: {
                 projectId: args.id,
+            },
+            include: {
+                cards: true
             }
         });
     },
@@ -86,6 +93,9 @@ export const querys = {
         return  await context.orm.table.findUnique({
             where: {
                 id: args.id,
+            },
+            include: {
+                cards: true
             }
         });
     }

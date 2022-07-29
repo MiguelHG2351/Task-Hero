@@ -4,7 +4,11 @@
 
  const nextConfig = {
     poweredByHeader: false,
-    experimental: { images: { allowFutureImage: true } }
+    experimental: { images: { allowFutureImage: true } },
+    images: {
+        // firebase
+        domains: ["firebasestorage.googleapis.com"],
+    }
 }
 
 module.exports = nextConfig
