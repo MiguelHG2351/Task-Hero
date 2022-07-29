@@ -14,8 +14,8 @@ function createApolloClient() {
         }
       });
       const httpLink = createHttpLink({
-        // uri: 'https://task-hero-api.herokuapp.com/graphql',
-        uri: 'http://localhost:4000/graphql',
+        uri: 'https://task-hero-api.herokuapp.com/graphql',
+        // uri: 'http://localhost:4000/graphql',
       });
 
     return new ApolloClient({
