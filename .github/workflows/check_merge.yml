@@ -4,7 +4,7 @@ on:
   workflow_dispatch
 
 env:
-  pscale_base_directory: frontend/.pscale
+  pscale_base_directory: .pscale
     
 jobs:
 

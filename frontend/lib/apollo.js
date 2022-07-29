@@ -9,7 +9,7 @@ function createApolloClient() {
         return {
           headers: {
             ...headers,
-            authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6ImNsNTF4cW1kYTAwMDA5bzRlMHJvbnh6NDgiLCJpYXQiOjE2NTY2NzQ2MTgsImV4cCI6MTY1NzUzODYxOH0.fhydN-eNt-Kykn75hANQESoS4g2VT8hEbt8NSldgyHU",
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6ImNsNTF4cW1kYTAwMDA5bzRlMHJvbnh6NDgiLCJpYXQiOjE2NTY2NzQ2MTgsImV4cCI6MTY1NzUzODYxOH0.fhydN-eNt-Kykn75hANQESoS4g2VT8hEbt8NSldgyHU",
           }
         }
       });
